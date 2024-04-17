@@ -2,7 +2,7 @@
 
 **Symbiotic is a shared security protocol enabling decentralized networks to control and customize their own multi-asset restaking implementation.**
 
-Symbiotic consists of:
+Symbiotic core consists of:
 
 - **Bond**: a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset.
 

@@ -6,14 +6,14 @@ Any operator wishing to operate in a Proof of Stake (POS) system must have a sta
 
 BondToken introduces a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset. BondToken represents an asset but does not require physically holding or locking this asset. The collateral backing the BondToken can be in various forms, such as a liquidity pool position, some real-world asset, or generally any type of asset. Depending on the implementation of BondToken, this collateral asset can be held within the BondToken itself or elsewhere.
 
-1. BondToken represents an asset, which can be obtained through the asset() method of BondToken.
-2. Holding any amount of BondToken signifies a commitment that an equal amount of the BondToken.asset() exists and is accessible by the holder. In other words, holding x amount of BondToken means that a user holds x amount of what BondToken.asset() represents. BondToken is an ERC20 token.
-3. It is unspecified how BondToken backs the BondToken.asset(). It might hold some internal funds convertible to BondToken.asset(), or it might not hold such funds at all and back it in another way.
+1. BondToken represents an asset, which can be obtained through the `asset()` method of BondToken.
+2. Holding any amount of BondToken signifies a commitment that an equal amount of the `BondToken.asset()` exists and is accessible by the holder. In other words, holding x amount of BondToken means that a user holds x amount of what `BondToken.asset()` represents. BondToken is an `ERC20` token.
+3. It is unspecified how BondToken backs the `BondToken.asset()`. It might hold some internal funds convertible to `BondToken.asset()`, or it might not hold such funds at all and back it in another way.
 
-Any holder of BondToken can convert BondToken to BondToken.asset(). Moreover, x amount of BondToken is convertible to x amount of BondToken.asset(). To do this, the holder must call the issueDebt method with a given amount and recipient.
+Any holder of BondToken can convert BondToken to `BondToken.asset()`. Moreover, x amount of BondToken is convertible to x amount of `BondToken.asset()`. To do this, the holder must call the issueDebt method with a given amount and recipient.
 
-1. The only way to obtain BondToken.asset() is through the issueDebt method.
-2. This method reduces the balanceOf(sender) by the specified amount, effectively creating a so-called debt.
+1. The only way to obtain `BondToken.asset()` is through the issueDebt method.
+2. This method reduces the `BondToken.balanceOf(sender)` by the specified amount, effectively creating a so-called debt.
 3. The process for repaying this debt remains unspecified.
 
 ### Technical Overview
