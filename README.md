@@ -10,7 +10,9 @@ Symbiotic consists of:
 
 Coming soon...
 
-## [Technical Documentation](https://github.com/symbioticfi/core/tree/main/docs)
+## Technical Documentation
+
+Can be found [here](https://github.com/symbioticfi/core/tree/main/docs).
 
 ## Usage
 

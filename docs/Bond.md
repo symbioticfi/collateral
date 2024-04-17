@@ -150,10 +150,10 @@ Next, we outline several invariants and technical limitations, what BondToken mu
 
 Debt repayment behavior:
 
-- Standard doesn't specify the way how debt should be repaid but specifies the state changes
+- Standard doesn't specify the way how debt should be repaid but specifies the state changes.
 - $debt_{ir}$, $recipientDebt_{r}$, $issuerDebt_{i}$, $totalDebt$ **MUST** decrease by $repaidAmount$, where $debt_{ir}$ **MUST** be greater or equal than $repaidAmount$.
 - $repaidDebt_{ir}$, $recipientRepaidDebt_{r}$, $issuerRepaidDebt_{i}$, $totalRepaidDebt$ **MUST** increase by $repaidAmount$.
-- $repaidAmount$ amount of the $asset$ should be transferred to $recipient$
+- $repaidAmount$ amount of the $asset$ should be transferred to $recipient$.
 - `IBond:RepayDebt(issuer, recipient, debtRepaid)` **MUST** be emitted.
 
 ### Deploy
