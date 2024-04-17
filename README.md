@@ -1,19 +1,27 @@
-## Foundry
+## Symbiotic
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Symbiotic is a shared security protocol enabling decentralized networks to control and customize their own multi-asset restaking implementation.**
 
-Foundry consists of:
+Symbiotic consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- **Bond**: a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset.
 
 ## Documentation
 
-https://book.getfoundry.sh/
+Coming soon...
+
+## [Technical Documentation](https://github.com/symbioticfi/core/tree/main/docs)
 
 ## Usage
+
+### Env
+
+Create `.env` file using a template:
+
+```
+PRIVATE_KEY=0x<PRIVATE_KEY>
+RPC_MAINNET=
+```
 
 ### Build
 
@@ -37,30 +45,4 @@ $ forge fmt
 
 ```shell
 $ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
 ```
