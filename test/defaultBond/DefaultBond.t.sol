@@ -229,7 +229,6 @@ contract DefaultBondTest is Test {
 
         uint256 aliceBalance = token.balanceOf(alice);
         uint256 deadBalance = token.balanceOf(DEAD);
-        uint256 amount_ = defaultBondToken.balanceOf(alice);
         _issueDebt(alice, DEAD, token, toIssue);
 
         assertEq(token.balanceOf(alice) - aliceBalance, 0);

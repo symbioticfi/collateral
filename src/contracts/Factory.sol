@@ -5,7 +5,7 @@ import {IFactory} from "src/interfaces/IFactory.sol";
 
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-contract Factory is IFactory {
+abstract contract Factory is IFactory {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private _entities;

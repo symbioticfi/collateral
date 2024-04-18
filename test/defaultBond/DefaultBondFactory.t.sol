@@ -33,6 +33,11 @@ contract DefaultPropertyTest is Test {
     function test_Create() public {
         defaultBondFactory = new DefaultBondFactory();
 
+        assertEq(defaultBondFactory.totalEntities(), 0);
+        assertEq(defaultBondFactory.isEntity(alice), false);
+        vm.expectRevert();
+        defaultBondFactory.entity(0);
+
         address defaultBondAddress = defaultBondFactory.create(address(token));
         defaultBond = DefaultBond(defaultBondAddress);
 
