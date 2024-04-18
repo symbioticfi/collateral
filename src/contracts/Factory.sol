@@ -8,7 +8,7 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 contract Factory is IFactory {
     using EnumerableSet for EnumerableSet.AddressSet;
 
-    EnumerableSet.AddressSet internal _entities;
+    EnumerableSet.AddressSet private _entities;
 
     modifier checkEntity(address entity_) {
         if (!isEntity(entity_)) {
@@ -27,14 +27,14 @@ contract Factory is IFactory {
     /**
      * @inheritdoc IFactory
      */
-    function totalEntities() external view override returns (uint256) {
+    function totalEntities() public view override returns (uint256) {
         return _entities.length();
     }
 
     /**
      * @inheritdoc IFactory
      */
-    function entity(uint256 index) external view override returns (address) {
+    function entity(uint256 index) public view override returns (address) {
         return _entities.at(index);
     }
 
