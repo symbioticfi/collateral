@@ -35,6 +35,7 @@ contract DefaultPropertyTest is Test {
 
         address defaultBondAddress = defaultBondFactory.create(address(token));
         defaultBond = DefaultBond(defaultBondAddress);
+        assertEq(defaultBondFactory.isEntity(defaultBondAddress), true);
 
         assertEq(defaultBond.asset(), address(token));
     }
