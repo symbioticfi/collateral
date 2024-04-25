@@ -2,5 +2,4 @@
 forge-std/=lib/forge-std/src/
 @openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/
 permit2/=lib/permit2/
-solmate/=lib/permit2/lib/solmate/
 

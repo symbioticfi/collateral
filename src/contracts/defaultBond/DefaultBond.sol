@@ -7,13 +7,13 @@ import {Permit2Lib} from "src/contracts/libraries/Permit2Lib.sol";
 
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {ERC20} from "solmate/src/tokens/ERC20.sol";
 
 contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBond {
     using SafeERC20 for IERC20;
-    using Permit2Lib for ERC20;
+    using Permit2Lib for IERC20;
 
     uint8 private DECIMALS;
 
@@ -87,7 +87,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
      */
     function deposit(address recipient, uint256 amount) public override nonReentrant returns (uint256) {
         uint256 balanceBefore = IERC20(asset).balanceOf(address(this));
-        ERC20(asset).transferFrom2(msg.sender, address(this), amount);
+        IERC20(asset).transferFrom2(msg.sender, address(this), amount);
         uint256 toMint = IERC20(asset).balanceOf(address(this)) - balanceBefore;
 
         if (toMint == 0) {
@@ -110,7 +110,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
         bytes32 r,
         bytes32 s
     ) external override returns (uint256) {
-        ERC20(asset).tryPermit2(msg.sender, address(this), amount, deadline, v, r, s);
+        IERC20(asset).tryPermit2(msg.sender, address(this), amount, deadline, v, r, s);
 
         return deposit(recipient, amount);
     }

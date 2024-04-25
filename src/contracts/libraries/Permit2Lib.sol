@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {ERC20} from "solmate/src/tokens/ERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 
 import {IDAIPermit} from "permit2/src/interfaces/IDAIPermit.sol";
 import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
@@ -32,9 +33,9 @@ library Permit2Lib {
     /// @param from The user to transfer from.
     /// @param to The user to transfer to.
     /// @param amount The amount to transfer.
-    function transferFrom2(ERC20 token, address from, address to, uint256 amount) internal {
+    function transferFrom2(IERC20 token, address from, address to, uint256 amount) internal {
         // Generate calldata for a standard transferFrom call.
-        bytes memory inputData = abi.encodeCall(ERC20.transferFrom, (from, to, amount));
+        bytes memory inputData = abi.encodeCall(IERC20.transferFrom, (from, to, amount));
 
         bool success; // Call the token contract as normal, capturing whether it succeeded.
         assembly {
@@ -70,7 +71,7 @@ library Permit2Lib {
     /// @param r Must produce valid secp256k1 signature from the owner along with v and s.
     /// @param s Must produce valid secp256k1 signature from the owner along with r and v.
     function tryPermit2(
-        ERC20 token,
+        IERC20 token,
         address owner,
         address spender,
         uint256 amount,
@@ -80,7 +81,7 @@ library Permit2Lib {
         bytes32 s
     ) internal {
         // Generate calldata for a call to DOMAIN_SEPARATOR on the token.
-        bytes memory inputData = abi.encodeWithSelector(ERC20.DOMAIN_SEPARATOR.selector);
+        bytes memory inputData = abi.encodeWithSelector(IERC20Permit.DOMAIN_SEPARATOR.selector);
 
         bool success; // Call the token contract as normal, capturing whether it succeeded.
         bytes32 domainSeparator; // If the call succeeded, we'll capture the return value here.
@@ -110,8 +111,10 @@ library Permit2Lib {
             // We'll use DAI's special permit if it's DOMAIN_SEPARATOR matches,
             // otherwise we'll just encode a call to the standard permit function.
             inputData = domainSeparator == DAI_DOMAIN_SEPARATOR
-                ? abi.encodeCall(IDAIPermit.permit, (owner, spender, token.nonces(owner), deadline, true, v, r, s))
-                : abi.encodeCall(ERC20.permit, (owner, spender, amount, deadline, v, r, s));
+                ? abi.encodeCall(
+                    IDAIPermit.permit, (owner, spender, IERC20Permit(address(token)).nonces(owner), deadline, true, v, r, s)
+                )
+                : abi.encodeCall(IERC20Permit.permit, (owner, spender, amount, deadline, v, r, s));
 
             assembly {
                 success := call(gas(), token, 0, add(inputData, 32), mload(inputData), 0, 0)
@@ -135,7 +138,7 @@ library Permit2Lib {
     /// @param r Must produce valid secp256k1 signature from the owner along with v and s.
     /// @param s Must produce valid secp256k1 signature from the owner along with r and v.
     function simplePermit2(
-        ERC20 token,
+        IERC20 token,
         address owner,
         address spender,
         uint256 amount,
