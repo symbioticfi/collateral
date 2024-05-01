@@ -10,7 +10,7 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 contract DefaultBondFactory is Factory, IDefaultBondFactory {
     using Clones for address;
 
-    address private BOND_IMPLEMENTATION;
+    address private immutable BOND_IMPLEMENTATION;
 
     constructor() {
         BOND_IMPLEMENTATION = address(new DefaultBond());

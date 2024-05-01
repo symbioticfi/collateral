@@ -5,6 +5,12 @@ interface IFactory {
     error EntityNotExist();
 
     /**
+     * @notice Emitted when an entity is added.
+     * @param entity address of the added entity
+     */
+    event AddEntity(address indexed entity);
+
+    /**
      * @notice Get if a given address is an entity.
      * @param entity address to check
      * @return if the given address is an entity

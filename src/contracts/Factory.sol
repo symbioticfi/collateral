@@ -40,5 +40,7 @@ abstract contract Factory is IFactory {
 
     function _addEntity(address entity_) internal {
         _entities.add(entity_);
+
+        emit AddEntity(entity_);
     }
 }
