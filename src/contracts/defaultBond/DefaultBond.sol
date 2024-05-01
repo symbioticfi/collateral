@@ -7,8 +7,8 @@ import {Permit2Lib} from "src/contracts/libraries/Permit2Lib.sol";
 
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBond {
@@ -67,12 +67,15 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     }
 
     function initialize(address asset_) external virtual initializer {
-        __ERC20_init(string.concat("DefaultBond_", ERC20(asset_).name()), string.concat("DB_", ERC20(asset_).symbol()));
+        __ERC20_init(
+            string.concat("DefaultBond_", IERC20Metadata(asset_).name()),
+            string.concat("DB_", IERC20Metadata(asset_).symbol())
+        );
         __ReentrancyGuard_init();
 
         asset = asset_;
 
-        DECIMALS = ERC20(asset).decimals();
+        DECIMALS = IERC20Metadata(asset).decimals();
     }
 
     /**
