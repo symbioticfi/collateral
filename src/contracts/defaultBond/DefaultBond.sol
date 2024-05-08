@@ -66,7 +66,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
         _disableInitializers();
     }
 
-    function initialize(address asset_) external virtual initializer {
+    function initialize(address asset_) external initializer {
         __ERC20_init(
             string.concat("DefaultBond_", IERC20Metadata(asset_).name()),
             string.concat("DB_", IERC20Metadata(asset_).symbol())
@@ -88,7 +88,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     /**
      * @inheritdoc IDefaultBond
      */
-    function deposit(address recipient, uint256 amount) public override nonReentrant returns (uint256) {
+    function deposit(address recipient, uint256 amount) public nonReentrant returns (uint256) {
         uint256 balanceBefore = IERC20(asset).balanceOf(address(this));
         IERC20(asset).transferFrom2(msg.sender, address(this), amount);
         uint256 toMint = IERC20(asset).balanceOf(address(this)) - balanceBefore;
@@ -112,7 +112,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external override returns (uint256) {
+    ) external returns (uint256) {
         IERC20(asset).tryPermit2(msg.sender, address(this), amount, deadline, v, r, s);
 
         return deposit(recipient, amount);
@@ -121,7 +121,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     /**
      * @inheritdoc IDefaultBond
      */
-    function withdraw(address recipient, uint256 amount) external override {
+    function withdraw(address recipient, uint256 amount) external {
         if (amount == 0) {
             revert InsufficientWithdraw();
         }
@@ -134,7 +134,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     /**
      * @inheritdoc IBond
      */
-    function issueDebt(address recipient, uint256 amount) external override {
+    function issueDebt(address recipient, uint256 amount) external {
         if (amount == 0) {
             revert InsufficientIssueDebt();
         }

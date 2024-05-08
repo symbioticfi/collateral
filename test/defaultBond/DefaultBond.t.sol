@@ -91,6 +91,11 @@ contract DefaultBondTest is Test {
         vm.stopPrank();
     }
 
+    function test_ReinitRevert() public {
+        vm.expectRevert();
+        defaultBondToken.initialize(address(token));
+    }
+
     function test_Deposit(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _deposit(alice, token, amount);
