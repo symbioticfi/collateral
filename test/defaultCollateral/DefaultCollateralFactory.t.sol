@@ -31,14 +31,24 @@ contract DefaultCollateralFactoryTest is Test {
         token = IERC20(new Token("Token"));
     }
 
-    function test_Create() public {
+    function test_Create(uint256 initialLimit, address limitIncreaser) public {
         defaultCollateralFactory = new DefaultCollateralFactory();
 
-        address defaultCollateralAddress = defaultCollateralFactory.create(address(token));
+        address defaultCollateralAddress = defaultCollateralFactory.create(address(token), initialLimit, limitIncreaser);
         defaultCollateral = DefaultCollateral(defaultCollateralAddress);
         assertEq(defaultCollateralFactory.isEntity(defaultCollateralAddress), true);
 
         assertEq(defaultCollateral.asset(), address(token));
         assertEq(defaultCollateral.decimals(), IERC20Metadata(address(token)).decimals());
+        assertEq(defaultCollateral.totalRepaidDebt(), 0);
+        assertEq(defaultCollateral.issuerRepaidDebt(alice), 0);
+        assertEq(defaultCollateral.recipientRepaidDebt(alice), 0);
+        assertEq(defaultCollateral.repaidDebt(alice, alice), 0);
+        assertEq(defaultCollateral.totalDebt(), 0);
+        assertEq(defaultCollateral.issuerDebt(alice), 0);
+        assertEq(defaultCollateral.recipientDebt(alice), 0);
+        assertEq(defaultCollateral.debt(alice, alice), 0);
+        assertEq(defaultCollateral.limit(), initialLimit);
+        assertEq(defaultCollateral.limitIncreaser(), limitIncreaser);
     }
 }

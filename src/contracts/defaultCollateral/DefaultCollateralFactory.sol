@@ -19,9 +19,9 @@ contract DefaultCollateralFactory is Factory, IDefaultCollateralFactory {
     /**
      * @inheritdoc IDefaultCollateralFactory
      */
-    function create(address asset) external returns (address) {
+    function create(address asset, uint256 initialLimit, address limitIncreaser) external returns (address) {
         address collateral = COLLATERAL_IMPLEMENTATION.clone();
-        DefaultCollateral(collateral).initialize(asset);
+        DefaultCollateral(collateral).initialize(asset, initialLimit, limitIncreaser);
 
         _addEntity(collateral);
 

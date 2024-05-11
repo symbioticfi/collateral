@@ -62,11 +62,28 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
      */
     mapping(address issuer => mapping(address recipient => uint256 amount)) public debt;
 
+    /**
+     * @inheritdoc IDefaultCollateral
+     */
+    uint256 public limit;
+
+    /**
+     * @inheritdoc IDefaultCollateral
+     */
+    address public limitIncreaser;
+
+    modifier onlyLimitIncreaser() {
+        if (msg.sender != limitIncreaser) {
+            revert NotLimitIncreaser();
+        }
+        _;
+    }
+
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(address asset_) external initializer {
+    function initialize(address asset_, uint256 initialLimit, address limitIncreaser_) external initializer {
         __ERC20_init(
             string.concat("DefaultCollateral_", IERC20Metadata(asset_).name()),
             string.concat("DB_", IERC20Metadata(asset_).symbol())
@@ -74,6 +91,9 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
         __ReentrancyGuard_init();
 
         asset = asset_;
+
+        limit = initialLimit;
+        limitIncreaser = limitIncreaser_;
 
         DECIMALS = IERC20Metadata(asset).decimals();
     }
@@ -98,6 +118,12 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
         }
 
         _mint(recipient, amount);
+
+        if (limit < totalSupply()) {
+            revert ExceedsLimit();
+        }
+
+        emit Deposit(msg.sender, recipient, amount);
 
         return amount;
     }
@@ -129,6 +155,8 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
         _burn(msg.sender, amount);
 
         IERC20(asset).safeTransfer(recipient, amount);
+
+        emit Withdraw(msg.sender, recipient, amount);
     }
 
     /**
@@ -151,5 +179,23 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
         IERC20(asset).safeTransfer(recipient, amount);
 
         emit RepayDebt(msg.sender, recipient, amount);
+    }
+
+    /**
+     * @inheritdoc IDefaultCollateral
+     */
+    function increaseLimit(uint256 amount) external onlyLimitIncreaser {
+        limit += amount;
+
+        emit IncreaseLimit(amount);
+    }
+
+    /**
+     * @inheritdoc IDefaultCollateral
+     */
+    function setLimitIncreaser(address limitIncreaser_) external onlyLimitIncreaser {
+        limitIncreaser = limitIncreaser_;
+
+        emit SetLimitIncreaser(limitIncreaser_);
     }
 }
