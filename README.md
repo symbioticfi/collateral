@@ -4,7 +4,7 @@
 
 Symbiotic core consists of:
 
-- **Bond**: a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset.
+- **Collateral**: a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset.
 
 ## Documentation
 

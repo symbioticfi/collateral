@@ -3,7 +3,7 @@ pragma solidity 0.8.25;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-interface IBond is IERC20 {
+interface ICollateral is IERC20 {
     /**
      * @notice Emitted when debt is issued.
      * @param issuer address of the debt's issuer
@@ -21,7 +21,7 @@ interface IBond is IERC20 {
     event RepayDebt(address indexed issuer, address indexed recipient, uint256 debtRepaid);
 
     /**
-     * @notice Get the bond's underlying asset.
+     * @notice Get the collateral's underlying asset.
      * @return asset address of the underlying asset
      */
     function asset() external view returns (address);
@@ -83,9 +83,9 @@ interface IBond is IERC20 {
     function debt(address issuer, address recipient) external view returns (uint256);
 
     /**
-     * @notice Burn a given amount of the bond, and increase a debt of the underlying asset for the caller.
+     * @notice Burn a given amount of the collateral, and increase a debt of the underlying asset for the caller.
      * @param recipient address that should receive the underlying asset
-     * @param amount amount of the bond
+     * @param amount amount of the collateral
      */
     function issueDebt(address recipient, uint256 amount) external;
 }

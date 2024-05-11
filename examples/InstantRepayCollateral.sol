@@ -1,66 +1,64 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-import {IBond} from "src/interfaces/IBond.sol";
+import {ICollateral} from "src/interfaces/ICollateral.sol";
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DelayedRepayBond is ERC20, Ownable, IBond {
+contract InstantRepayCollateral is ERC20, ICollateral {
     using SafeERC20 for IERC20;
 
     uint8 private immutable DECIMALS;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     address public asset;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     uint256 public totalRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => uint256 amount) public issuerRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address recipient => uint256 amount) public recipientRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => mapping(address recipient => uint256 amount)) public repaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     uint256 public totalDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => uint256 amount) public issuerDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address recipient => uint256 amount) public recipientDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => mapping(address recipient => uint256 amount)) public debt;
 
     constructor(address asset_)
-        ERC20(string.concat("DefaultBond_", ERC20(asset_).name()), string.concat("DB_", ERC20(asset_).symbol()))
-        Ownable(msg.sender)
+        ERC20(string.concat("DefaultCollateral_", ERC20(asset_).name()), string.concat("DB_", ERC20(asset_).symbol()))
     {
         asset = asset_;
 
@@ -71,7 +69,9 @@ contract DelayedRepayBond is ERC20, Ownable, IBond {
         return DECIMALS;
     }
 
-    function mint(uint256 amount) public onlyOwner {
+    function deposit(uint256 amount) public {
+        IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
+
         if (amount == 0) {
             revert();
         }
@@ -79,8 +79,18 @@ contract DelayedRepayBond is ERC20, Ownable, IBond {
         _mint(msg.sender, amount);
     }
 
+    function withdraw(uint256 amount) external {
+        if (amount == 0) {
+            revert();
+        }
+
+        _burn(msg.sender, amount);
+
+        IERC20(asset).safeTransfer(msg.sender, amount);
+    }
+
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     function issueDebt(address recipient, uint256 amount) external override {
         if (amount == 0) {
@@ -89,35 +99,15 @@ contract DelayedRepayBond is ERC20, Ownable, IBond {
 
         _burn(msg.sender, amount);
 
-        totalDebt += amount;
-        issuerDebt[msg.sender] += amount;
-        recipientDebt[recipient] += amount;
-        debt[msg.sender][recipient] += amount;
-
         emit IssueDebt(msg.sender, recipient, amount);
-    }
-
-    function repayDebt(address issuer, address recipient, uint256 amount) external {
-        if (amount == 0) {
-            revert();
-        }
-
-        if (amount > debt[issuer][recipient]) {
-            revert();
-        }
-
-        IERC20(asset).safeTransferFrom(msg.sender, recipient, amount);
-
-        totalDebt -= amount;
-        issuerDebt[issuer] -= amount;
-        recipientDebt[recipient] -= amount;
-        debt[issuer][recipient] -= amount;
 
         totalRepaidDebt += amount;
-        issuerRepaidDebt[issuer] += amount;
+        issuerRepaidDebt[msg.sender] += amount;
         recipientRepaidDebt[recipient] += amount;
-        repaidDebt[issuer][recipient] += amount;
+        repaidDebt[msg.sender][recipient] += amount;
 
-        emit RepayDebt(issuer, recipient, amount);
+        IERC20(asset).safeTransfer(recipient, amount);
+
+        emit RepayDebt(msg.sender, recipient, amount);
     }
 }

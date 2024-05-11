@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-import {IDefaultBond} from "src/interfaces/defaultBond/IDefaultBond.sol";
-import {IBond} from "src/interfaces/IBond.sol";
+import {IDefaultCollateral} from "src/interfaces/defaultCollateral/IDefaultCollateral.sol";
+import {ICollateral} from "src/interfaces/ICollateral.sol";
 import {Permit2Lib} from "src/contracts/libraries/Permit2Lib.sol";
 
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
@@ -11,54 +11,54 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBond {
+contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultCollateral {
     using SafeERC20 for IERC20;
     using Permit2Lib for IERC20;
 
     uint8 private DECIMALS;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     address public asset;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     uint256 public totalRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => uint256 amount) public issuerRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address recipient => uint256 amount) public recipientRepaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => mapping(address recipient => uint256 amount)) public repaidDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     uint256 public totalDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => uint256 amount) public issuerDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address recipient => uint256 amount) public recipientDebt;
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     mapping(address issuer => mapping(address recipient => uint256 amount)) public debt;
 
@@ -68,7 +68,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
 
     function initialize(address asset_) external initializer {
         __ERC20_init(
-            string.concat("DefaultBond_", IERC20Metadata(asset_).name()),
+            string.concat("DefaultCollateral_", IERC20Metadata(asset_).name()),
             string.concat("DB_", IERC20Metadata(asset_).symbol())
         );
         __ReentrancyGuard_init();
@@ -86,24 +86,24 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     }
 
     /**
-     * @inheritdoc IDefaultBond
+     * @inheritdoc IDefaultCollateral
      */
     function deposit(address recipient, uint256 amount) public nonReentrant returns (uint256) {
         uint256 balanceBefore = IERC20(asset).balanceOf(address(this));
         IERC20(asset).transferFrom2(msg.sender, address(this), amount);
-        uint256 toMint = IERC20(asset).balanceOf(address(this)) - balanceBefore;
+        amount = IERC20(asset).balanceOf(address(this)) - balanceBefore;
 
-        if (toMint == 0) {
+        if (amount == 0) {
             revert InsufficientDeposit();
         }
 
-        _mint(recipient, toMint);
+        _mint(recipient, amount);
 
-        return toMint;
+        return amount;
     }
 
     /**
-     * @inheritdoc IDefaultBond
+     * @inheritdoc IDefaultCollateral
      */
     function deposit(
         address recipient,
@@ -119,7 +119,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     }
 
     /**
-     * @inheritdoc IDefaultBond
+     * @inheritdoc IDefaultCollateral
      */
     function withdraw(address recipient, uint256 amount) external {
         if (amount == 0) {
@@ -132,7 +132,7 @@ contract DefaultBond is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDefaultBo
     }
 
     /**
-     * @inheritdoc IBond
+     * @inheritdoc ICollateral
      */
     function issueDebt(address recipient, uint256 amount) external {
         if (amount == 0) {

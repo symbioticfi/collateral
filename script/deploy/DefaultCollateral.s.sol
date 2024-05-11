@@ -2,14 +2,14 @@
 pragma solidity ^0.8.13;
 
 import {Script} from "forge-std/Script.sol";
-import {DefaultBondFactory} from "src/contracts/defaultBond/DefaultBondFactory.sol";
+import {DefaultCollateralFactory} from "src/contracts/defaultCollateral/DefaultCollateralFactory.sol";
 
-contract DefaultBondScript is Script {
+contract DefaultCollateralScript is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        new DefaultBondFactory();
+        new DefaultCollateralFactory();
 
         vm.stopBroadcast();
     }

@@ -3,9 +3,9 @@ pragma solidity 0.8.25;
 
 import {Test, console2} from "forge-std/Test.sol";
 
-import {DefaultBondFactory} from "src/contracts/defaultBond/DefaultBondFactory.sol";
-import {DefaultBond} from "src/contracts/defaultBond/DefaultBond.sol";
-import {IDefaultBond} from "src/interfaces/defaultBond/IDefaultBond.sol";
+import {DefaultCollateralFactory} from "src/contracts/defaultCollateral/DefaultCollateralFactory.sol";
+import {DefaultCollateral} from "src/contracts/defaultCollateral/DefaultCollateral.sol";
+import {IDefaultCollateral} from "src/interfaces/defaultCollateral/IDefaultCollateral.sol";
 
 import {Token} from "test/mocks/Token.sol";
 import {PermitToken} from "test/mocks/PermitToken.sol";
@@ -18,7 +18,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 
-contract DefaultBondTest is Test {
+contract DefaultCollateralTest is Test {
     address public DEAD = address(0xdEaD);
 
     bytes32 public constant _PERMIT_TYPEHASH =
@@ -37,11 +37,11 @@ contract DefaultBondTest is Test {
     address bob;
     uint256 bobPrivateKey;
 
-    DefaultBondFactory defaultBondFactory;
+    DefaultCollateralFactory defaultCollateralFactory;
 
-    DefaultBond defaultBondToken;
-    DefaultBond defaultBondPermitToken;
-    DefaultBond defaultBondDaiLikeToken;
+    DefaultCollateral defaultCollateralToken;
+    DefaultCollateral defaultCollateralPermitToken;
+    DefaultCollateral defaultCollateralDaiLikeToken;
 
     IERC20 token;
     IERC20 permitToken;
@@ -59,16 +59,16 @@ contract DefaultBondTest is Test {
         permitToken = IERC20(new PermitToken("PermitToken"));
         daiLikeToken = IERC20(new DAILikeToken(block.chainid));
 
-        defaultBondFactory = new DefaultBondFactory();
+        defaultCollateralFactory = new DefaultCollateralFactory();
 
-        address defaultBondAddress = defaultBondFactory.create(address(token));
-        defaultBondToken = DefaultBond(defaultBondAddress);
+        address defaultCollateralAddress = defaultCollateralFactory.create(address(token));
+        defaultCollateralToken = DefaultCollateral(defaultCollateralAddress);
 
-        defaultBondAddress = defaultBondFactory.create(address(permitToken));
-        defaultBondPermitToken = DefaultBond(defaultBondAddress);
+        defaultCollateralAddress = defaultCollateralFactory.create(address(permitToken));
+        defaultCollateralPermitToken = DefaultCollateral(defaultCollateralAddress);
 
-        defaultBondAddress = defaultBondFactory.create(address(daiLikeToken));
-        defaultBondDaiLikeToken = DefaultBond(defaultBondAddress);
+        defaultCollateralAddress = defaultCollateralFactory.create(address(daiLikeToken));
+        defaultCollateralDaiLikeToken = DefaultCollateral(defaultCollateralAddress);
 
         token.transfer(alice, 100 * 1e18);
         token.transfer(bob, 100 * 1e18);
@@ -78,13 +78,13 @@ contract DefaultBondTest is Test {
         daiLikeToken.transfer(bob, 100 * 1e18);
 
         vm.startPrank(alice);
-        token.approve(address(defaultBondToken), type(uint256).max);
+        token.approve(address(defaultCollateralToken), type(uint256).max);
         token.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
         permitToken.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
         daiLikeToken.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
         vm.stopPrank();
         vm.startPrank(bob);
-        token.approve(address(defaultBondToken), type(uint256).max);
+        token.approve(address(defaultCollateralToken), type(uint256).max);
         token.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
         permitToken.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
         daiLikeToken.approve(address(Permit2Lib.PERMIT2), type(uint256).max);
@@ -93,18 +93,18 @@ contract DefaultBondTest is Test {
 
     function test_ReinitRevert() public {
         vm.expectRevert();
-        defaultBondToken.initialize(address(token));
+        defaultCollateralToken.initialize(address(token));
     }
 
     function test_Deposit(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _deposit(alice, token, amount);
 
-        assertEq(defaultBondToken.balanceOf(alice), amount);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount);
     }
 
     function test_DepositRevertInsufficientDeposit() public {
-        vm.expectRevert(IDefaultBond.InsufficientDeposit.selector);
+        vm.expectRevert(IDefaultCollateral.InsufficientDeposit.selector);
         _deposit(alice, token, 0);
     }
 
@@ -112,40 +112,40 @@ contract DefaultBondTest is Test {
         amount = bound(amount, 10, 50 * 1e18);
         _depositWithPermit(alice, amount, type(uint32).max);
 
-        assertEq(defaultBondPermitToken.balanceOf(alice), amount);
+        assertEq(defaultCollateralPermitToken.balanceOf(alice), amount);
     }
 
     function test_DepositWithPermit2(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _depositWithPermit2(alice, amount, type(uint32).max);
 
-        assertEq(defaultBondToken.balanceOf(alice), amount);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount);
     }
 
     function test_DepositWithDAIPermit(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _depositWithDAIPermit(alice, amount, type(uint32).max);
 
-        assertEq(defaultBondDaiLikeToken.balanceOf(alice), amount);
+        assertEq(defaultCollateralDaiLikeToken.balanceOf(alice), amount);
     }
 
     function test_DepositOnBehalfOf(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         vm.startPrank(alice);
-        defaultBondToken.deposit(bob, amount);
+        defaultCollateralToken.deposit(bob, amount);
         vm.stopPrank();
 
-        assertEq(defaultBondToken.balanceOf(alice), 0);
-        assertEq(defaultBondToken.balanceOf(bob), amount);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(bob), amount);
     }
 
     function test_DepositTwice(uint256 amount1, uint256 amount2) public {
         amount1 = bound(amount1, 10, 50 * 1e18);
         amount2 = bound(amount2, 10, 50 * 1e18);
         _deposit(alice, token, amount1);
-        assertEq(defaultBondToken.balanceOf(alice), amount1);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount1);
         _deposit(alice, token, amount2);
-        assertEq(defaultBondToken.balanceOf(alice), amount1 + amount2);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount1 + amount2);
     }
 
     function test_DepositBoth(uint256 amount1, uint256 amount2) public {
@@ -154,26 +154,26 @@ contract DefaultBondTest is Test {
         _deposit(alice, token, amount1);
         _deposit(bob, token, amount2);
 
-        assertEq(defaultBondToken.balanceOf(alice), amount1);
-        assertEq(defaultBondToken.balanceOf(bob), amount2);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount1);
+        assertEq(defaultCollateralToken.balanceOf(bob), amount2);
     }
 
     function test_Withdraw(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _deposit(alice, token, amount);
         uint256 aliceBalance = token.balanceOf(alice);
-        uint256 amount_ = defaultBondToken.balanceOf(alice);
+        uint256 amount_ = defaultCollateralToken.balanceOf(alice);
         _withdraw(alice, alice, token, amount);
 
         assertEq(token.balanceOf(alice) - aliceBalance, amount);
         assertEq(token.balanceOf(alice) - aliceBalance, amount_);
-        assertEq(defaultBondToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
     }
 
     function test_WithdrawRevertInsufficientWithdraw(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _deposit(alice, token, amount);
-        vm.expectRevert(IDefaultBond.InsufficientWithdraw.selector);
+        vm.expectRevert(IDefaultCollateral.InsufficientWithdraw.selector);
         _withdraw(alice, alice, token, 0);
     }
 
@@ -193,10 +193,10 @@ contract DefaultBondTest is Test {
         uint256 aliceBalance = token.balanceOf(alice);
         _withdraw(alice, alice, token, amount1);
         assertEq(token.balanceOf(alice) - aliceBalance, amount1);
-        assertEq(defaultBondToken.balanceOf(alice), amount2);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount2);
         _withdraw(alice, alice, token, amount2);
         assertEq(token.balanceOf(alice) - aliceBalance, amount1 + amount2);
-        assertEq(defaultBondToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
     }
 
     function test_WithdrawBoth(uint256 amount1, uint256 amount2) public {
@@ -210,9 +210,9 @@ contract DefaultBondTest is Test {
         _withdraw(bob, bob, token, amount2);
 
         assertEq(token.balanceOf(alice) - aliceBalance, amount1);
-        assertEq(defaultBondToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
         assertEq(token.balanceOf(bob) - bobBalance, amount2);
-        assertEq(defaultBondToken.balanceOf(bob), 0);
+        assertEq(defaultCollateralToken.balanceOf(bob), 0);
     }
 
     function test_Issue(uint256 toMint, uint256 toIssue) public {
@@ -222,14 +222,14 @@ contract DefaultBondTest is Test {
 
         _deposit(alice, token, toMint);
 
-        assertEq(defaultBondToken.totalRepaidDebt(), 0);
-        assertEq(defaultBondToken.issuerRepaidDebt(alice), 0);
-        assertEq(defaultBondToken.recipientRepaidDebt(DEAD), 0);
-        assertEq(defaultBondToken.repaidDebt(alice, DEAD), 0);
-        assertEq(defaultBondToken.totalDebt(), 0);
-        assertEq(defaultBondToken.issuerDebt(alice), 0);
-        assertEq(defaultBondToken.recipientDebt(DEAD), 0);
-        assertEq(defaultBondToken.debt(alice, DEAD), 0);
+        assertEq(defaultCollateralToken.totalRepaidDebt(), 0);
+        assertEq(defaultCollateralToken.issuerRepaidDebt(alice), 0);
+        assertEq(defaultCollateralToken.recipientRepaidDebt(DEAD), 0);
+        assertEq(defaultCollateralToken.repaidDebt(alice, DEAD), 0);
+        assertEq(defaultCollateralToken.totalDebt(), 0);
+        assertEq(defaultCollateralToken.issuerDebt(alice), 0);
+        assertEq(defaultCollateralToken.recipientDebt(DEAD), 0);
+        assertEq(defaultCollateralToken.debt(alice, DEAD), 0);
 
         uint256 aliceBalance = token.balanceOf(alice);
         uint256 deadBalance = token.balanceOf(DEAD);
@@ -237,25 +237,25 @@ contract DefaultBondTest is Test {
 
         assertEq(token.balanceOf(alice) - aliceBalance, 0);
         assertEq(token.balanceOf(DEAD) - deadBalance, toIssue);
-        assertEq(defaultBondToken.balanceOf(alice), toMint - toIssue);
+        assertEq(defaultCollateralToken.balanceOf(alice), toMint - toIssue);
 
-        assertEq(defaultBondToken.totalRepaidDebt(), toIssue);
-        assertEq(defaultBondToken.issuerRepaidDebt(alice), toIssue);
-        assertEq(defaultBondToken.issuerRepaidDebt(bob), 0);
-        assertEq(defaultBondToken.recipientRepaidDebt(DEAD), toIssue);
-        assertEq(defaultBondToken.recipientRepaidDebt(alice), 0);
-        assertEq(defaultBondToken.repaidDebt(alice, DEAD), toIssue);
-        assertEq(defaultBondToken.repaidDebt(alice, alice), 0);
-        assertEq(defaultBondToken.totalDebt(), 0);
-        assertEq(defaultBondToken.issuerDebt(alice), 0);
-        assertEq(defaultBondToken.recipientDebt(DEAD), 0);
-        assertEq(defaultBondToken.debt(alice, DEAD), 0);
+        assertEq(defaultCollateralToken.totalRepaidDebt(), toIssue);
+        assertEq(defaultCollateralToken.issuerRepaidDebt(alice), toIssue);
+        assertEq(defaultCollateralToken.issuerRepaidDebt(bob), 0);
+        assertEq(defaultCollateralToken.recipientRepaidDebt(DEAD), toIssue);
+        assertEq(defaultCollateralToken.recipientRepaidDebt(alice), 0);
+        assertEq(defaultCollateralToken.repaidDebt(alice, DEAD), toIssue);
+        assertEq(defaultCollateralToken.repaidDebt(alice, alice), 0);
+        assertEq(defaultCollateralToken.totalDebt(), 0);
+        assertEq(defaultCollateralToken.issuerDebt(alice), 0);
+        assertEq(defaultCollateralToken.recipientDebt(DEAD), 0);
+        assertEq(defaultCollateralToken.debt(alice, DEAD), 0);
     }
 
     function test_IssueRevertInsufficientIssueDebt(uint256 amount) public {
         amount = bound(amount, 10, 50 * 1e18);
         _deposit(alice, token, amount);
-        vm.expectRevert(IDefaultBond.InsufficientIssueDebt.selector);
+        vm.expectRevert(IDefaultCollateral.InsufficientIssueDebt.selector);
         _issueDebt(alice, alice, token, 0);
     }
 
@@ -275,10 +275,10 @@ contract DefaultBondTest is Test {
         uint256 aliceBalance = token.balanceOf(alice);
         _issueDebt(alice, alice, token, amount1);
         assertEq(token.balanceOf(alice) - aliceBalance, amount1);
-        assertEq(defaultBondToken.balanceOf(alice), amount2);
+        assertEq(defaultCollateralToken.balanceOf(alice), amount2);
         _issueDebt(alice, alice, token, amount2);
         assertEq(token.balanceOf(alice) - aliceBalance, amount1 + amount2);
-        assertEq(defaultBondToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
     }
 
     function test_IssueBoth(uint256 amount1, uint256 amount2) public {
@@ -292,19 +292,19 @@ contract DefaultBondTest is Test {
         _issueDebt(bob, bob, token, amount2);
 
         assertEq(token.balanceOf(alice) - aliceBalance, amount1);
-        assertEq(defaultBondToken.balanceOf(alice), 0);
+        assertEq(defaultCollateralToken.balanceOf(alice), 0);
         assertEq(token.balanceOf(bob) - bobBalance, amount2);
-        assertEq(defaultBondToken.balanceOf(bob), 0);
+        assertEq(defaultCollateralToken.balanceOf(bob), 0);
     }
 
     function _deposit(address user, IERC20 token_, uint256 amount) internal {
         vm.startPrank(user);
         if (address(token_) == address(token)) {
-            defaultBondToken.deposit(user, amount);
+            defaultCollateralToken.deposit(user, amount);
         } else if (address(token_) == address(permitToken)) {
-            defaultBondPermitToken.deposit(user, amount);
+            defaultCollateralPermitToken.deposit(user, amount);
         } else if (address(token_) == address(daiLikeToken)) {
-            defaultBondDaiLikeToken.deposit(user, amount);
+            defaultCollateralDaiLikeToken.deposit(user, amount);
         }
         vm.stopPrank();
     }
@@ -318,7 +318,9 @@ contract DefaultBondTest is Test {
             abi.encodePacked(
                 "\x19\x01",
                 DOMAIN_SEPARATOR,
-                keccak256(abi.encode(_PERMIT_TYPEHASH, user, address(defaultBondPermitToken), amount, nonce, deadline))
+                keccak256(
+                    abi.encode(_PERMIT_TYPEHASH, user, address(defaultCollateralPermitToken), amount, nonce, deadline)
+                )
             )
         );
 
@@ -332,13 +334,13 @@ contract DefaultBondTest is Test {
         }
 
         vm.startPrank(user);
-        defaultBondPermitToken.deposit(user, amount, deadline, v, r, s);
+        defaultCollateralPermitToken.deposit(user, amount, deadline, v, r, s);
         vm.stopPrank();
     }
 
     function _depositWithPermit2(address user, uint256 amount, uint256 deadline) internal {
         (,, uint48 nonce) =
-            IPermit2(address(Permit2Lib.PERMIT2)).allowance(user, address(token), address(defaultBondToken));
+            IPermit2(address(Permit2Lib.PERMIT2)).allowance(user, address(token), address(defaultCollateralToken));
 
         IAllowanceTransfer.PermitDetails memory details = IAllowanceTransfer.PermitDetails({
             token: address(token),
@@ -349,7 +351,7 @@ contract DefaultBondTest is Test {
 
         IAllowanceTransfer.PermitSingle memory permit = IAllowanceTransfer.PermitSingle({
             details: details,
-            spender: address(defaultBondToken),
+            spender: address(defaultCollateralToken),
             sigDeadline: deadline
         });
 
@@ -375,7 +377,7 @@ contract DefaultBondTest is Test {
         }
 
         vm.startPrank(user);
-        defaultBondToken.deposit(user, amount, deadline, v, r, s);
+        defaultCollateralToken.deposit(user, amount, deadline, v, r, s);
         vm.stopPrank();
     }
 
@@ -389,7 +391,9 @@ contract DefaultBondTest is Test {
             abi.encodePacked(
                 "\x19\x01",
                 DOMAIN_SEPARATOR,
-                keccak256(abi.encode(PERMIT_TYPEHASH, user, address(defaultBondDaiLikeToken), nonce, deadline, true))
+                keccak256(
+                    abi.encode(PERMIT_TYPEHASH, user, address(defaultCollateralDaiLikeToken), nonce, deadline, true)
+                )
             )
         );
 
@@ -403,18 +407,18 @@ contract DefaultBondTest is Test {
         }
 
         vm.startPrank(user);
-        defaultBondDaiLikeToken.deposit(user, amount, deadline, v, r, s);
+        defaultCollateralDaiLikeToken.deposit(user, amount, deadline, v, r, s);
         vm.stopPrank();
     }
 
     function _withdraw(address user, address recipient, IERC20 token_, uint256 amount) internal {
         vm.startPrank(user);
         if (address(token_) == address(token)) {
-            defaultBondToken.withdraw(recipient, amount);
+            defaultCollateralToken.withdraw(recipient, amount);
         } else if (address(token_) == address(permitToken)) {
-            defaultBondPermitToken.withdraw(recipient, amount);
+            defaultCollateralPermitToken.withdraw(recipient, amount);
         } else if (address(token_) == address(daiLikeToken)) {
-            defaultBondDaiLikeToken.withdraw(recipient, amount);
+            defaultCollateralDaiLikeToken.withdraw(recipient, amount);
         }
         vm.stopPrank();
     }
@@ -422,11 +426,11 @@ contract DefaultBondTest is Test {
     function _issueDebt(address user, address recipient, IERC20 token_, uint256 amount) internal {
         vm.startPrank(user);
         if (address(token_) == address(token)) {
-            defaultBondToken.issueDebt(recipient, amount);
+            defaultCollateralToken.issueDebt(recipient, amount);
         } else if (address(token_) == address(permitToken)) {
-            defaultBondPermitToken.issueDebt(recipient, amount);
+            defaultCollateralPermitToken.issueDebt(recipient, amount);
         } else if (address(token_) == address(daiLikeToken)) {
-            defaultBondDaiLikeToken.issueDebt(recipient, amount);
+            defaultCollateralDaiLikeToken.issueDebt(recipient, amount);
         }
         vm.stopPrank();
     }
