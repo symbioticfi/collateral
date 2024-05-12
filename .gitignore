@@ -12,3 +12,4 @@ out/
 
 # Other files
 .gas-snapshot
+lcov.info
