@@ -12,7 +12,7 @@ Coming soon...
 
 ## Technical Documentation
 
-Can be found [here](https://github.com/symbioticfi/core/tree/main/docs).
+Can be found [here](https://github.com/symbioticfi/core/tree/main/specs).
 
 ## Usage
 
