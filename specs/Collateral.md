@@ -159,5 +159,17 @@ Debt repayment behavior:
 ### Deploy
 
 ```shell
-$ forge script script/deploy/DefaultCollateral.s.sol:DefaultCollateralScript --broadcast --rpc-url=$RPC_MAINNET
+$ source .env
+```
+
+#### Deploy factory
+
+```shell
+$ forge script script/deploy/DefaultCollateralFactory.s.sol:DefaultCollateralFactoryScript --broadcast --rpc-url=$RPC_MAINNET
+```
+
+#### Deploy entity
+
+```shell
+$ forge script script/deploy/DefaultCollateral.s.sol:DefaultCollateralScript 0x0000000000000000000000000000000000000000 0x0000000000000000000000000000000000000000 115792089237316195423570985008687907853269984665640564039457584007913129639935 0x0000000000000000000000000000000000000000 --sig "run(address,address,uint256,address)" --broadcast --rpc-url=$RPC_MAINNET
 ```
