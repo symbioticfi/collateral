@@ -10,9 +10,9 @@ Collateral introduces a new type of asset that allows stakeholders to hold onto 
 2. Holding any amount of Collateral signifies a commitment that an equal amount of the `Collateral.asset()` exists and is accessible by the holder. In other words, holding x amount of Collateral means that a user holds x amount of what `Collateral.asset()` represents. Collateral is an `ERC20` token.
 3. It is unspecified how Collateral backs the `Collateral.asset()`. It might hold some internal funds convertible to `Collateral.asset()`, or it might not hold such funds at all and back it in another way.
 
-Any holder of Collateral can convert Collateral to `Collateral.asset()`. Moreover, x amount of Collateral is convertible to x amount of `Collateral.asset()`. To do this, the holder must call the issueDebt method with a given amount and recipient.
+Any holder of Collateral can convert Collateral to `Collateral.asset()`. Moreover, x amount of Collateral is convertible to x amount of `Collateral.asset()`. To do this, the holder must call the `issueDebt()` method with a given amount and recipient.
 
-1. The only way to obtain `Collateral.asset()` is through the issueDebt method.
+1. It must be possible to obtain `Collateral.asset()` through the `issueDebt()` method. However, there could be other ways to do it.
 2. This method reduces the `Collateral.balanceOf(sender)` by the specified amount, effectively creating a so-called debt.
 3. The process for repaying this debt remains unspecified.
 
