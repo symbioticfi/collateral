@@ -86,7 +86,7 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
     function initialize(address asset_, uint256 initialLimit, address limitIncreaser_) external initializer {
         __ERC20_init(
             string.concat("DefaultCollateral_", IERC20Metadata(asset_).name()),
-            string.concat("DB_", IERC20Metadata(asset_).symbol())
+            string.concat("DC_", IERC20Metadata(asset_).symbol())
         );
         __ReentrancyGuard_init();
 
@@ -117,11 +117,11 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
             revert InsufficientDeposit();
         }
 
-        _mint(recipient, amount);
-
-        if (limit < totalSupply()) {
+        if (totalSupply() + amount > limit) {
             revert ExceedsLimit();
         }
+
+        _mint(recipient, amount);
 
         emit Deposit(msg.sender, recipient, amount);
 
