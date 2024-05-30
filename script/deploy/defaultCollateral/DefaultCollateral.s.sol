@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity 0.8.25;
 
 import {Script} from "forge-std/Script.sol";
 
@@ -12,8 +12,7 @@ contract DefaultCollateralScript is Script {
         uint256 initialLimit,
         address limitIncreaser
     ) external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        vm.startBroadcast(deployerPrivateKey);
+        vm.startBroadcast();
 
         IDefaultCollateralFactory(defaultCollateralFactory).create(asset, initialLimit, limitIncreaser);
 

@@ -12,7 +12,7 @@ Coming soon...
 
 ## Technical Documentation
 
-Can be found [here](https://github.com/symbioticfi/core/tree/main/specs).
+Can be found [here](./specs).
 
 ## Usage
 
@@ -21,30 +21,32 @@ Can be found [here](https://github.com/symbioticfi/core/tree/main/specs).
 Create `.env` file using a template:
 
 ```
-PRIVATE_KEY=0x<PRIVATE_KEY>
-RPC_MAINNET=
+ETH_RPC_URL=
+ETHERSCAN_API_KEY=
 ```
+
+\* ETHERSCAN_API_KEY is optional.
 
 ### Build
 
 ```shell
-$ forge build
+forge build
 ```
 
 ### Test
 
 ```shell
-$ forge test
+forge test
 ```
 
 ### Format
 
 ```shell
-$ forge fmt
+forge fmt
 ```
 
 ### Gas Snapshots
 
 ```shell
-$ forge snapshot
+forge snapshot
 ```
