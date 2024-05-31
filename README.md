@@ -1,18 +1,20 @@
-## Symbiotic
+**[Symbiotic Protocol](https://symbiotic.fi) is an extremely flexible and permissionless shared security system.**
 
-**Symbiotic is a shared security protocol enabling decentralized networks to control and customize their own multi-asset restaking implementation.**
+This repository contains a Symbiotic Collateral interface and its default implementation.
 
-Symbiotic core consists of:
+## Collateral
 
-- **Collateral**: a new type of asset that allows stakeholders to hold onto their funds and earn yield from them without needing to lock these funds in direct manner or convert them to another type of asset.
+**Collateral** - a concept introduced by Symbiotic that brings capital efficiency and scale by enabling assets used to secure Symbiotic networks to be held outside of the Symbiotic protocol itself - e.g. in DeFi positions on networks other than Ethereum itself.
 
-- **Vaults**: the delegation and restaking management layer of Symbiotic that handles three crucial parts of the Symbiotic economy: accounting, delegation strategies, and reward distribution.
+Symbiotic achieves this by separating the ability to slash assets from the underlying asset itself, similar to how liquid staking tokens create tokenized representations of underlying staked positions. Technically, collateral positions in Symbiotic are ERC-20 tokens with extended functionality to handle penalties.
 
-- **Operators**: entities running infrastructure for decentralized networks within and outside of the Symbiotic ecosystem.
+The Collateral interface can be found [here](./src/interfaces/ICollateral.sol).
 
-- **Resolvers**: contracts or entities that are able to veto slashing incidents forwarded from networks and can be shared across networks.
+## Default Collateral
 
-- **Networks**: any protocols that require a decentralized infrastructure network to deliver a service in the crypto economy, e.g. enabling developers to launch decentralized applications by taking care of validating and ordering transactions, providing off-chain data to applications in the crypto economy, or providing users with guarantees about cross-network interactions, etc.
+Default Collateral is a simple version of Collateral that has an instant debt repayment, which supports only non-rebase underlying assets.
+
+The implementation can be found [here](./src/contracts/defaultCollateral).
 
 ## Technical Documentation
 
