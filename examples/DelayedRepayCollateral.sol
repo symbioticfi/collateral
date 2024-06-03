@@ -8,6 +8,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+// WARNING: NOT FOR PRODUCTION USE
 contract DelayedRepayCollateral is ERC20, Ownable, ICollateral {
     using SafeERC20 for IERC20;
 
@@ -59,7 +60,7 @@ contract DelayedRepayCollateral is ERC20, Ownable, ICollateral {
     mapping(address issuer => mapping(address recipient => uint256 amount)) public debt;
 
     constructor(address asset_)
-        ERC20(string.concat("DefaultCollateral_", ERC20(asset_).name()), string.concat("DB_", ERC20(asset_).symbol()))
+        ERC20(string.concat("DelayedRepayCollateral_", ERC20(asset_).name()), string.concat("DRC_", ERC20(asset_).symbol()))
         Ownable(msg.sender)
     {
         asset = asset_;

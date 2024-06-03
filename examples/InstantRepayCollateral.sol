@@ -7,6 +7,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+// WARNING: NOT FOR PRODUCTION USE
 contract InstantRepayCollateral is ERC20, ICollateral {
     using SafeERC20 for IERC20;
 
@@ -58,7 +59,7 @@ contract InstantRepayCollateral is ERC20, ICollateral {
     mapping(address issuer => mapping(address recipient => uint256 amount)) public debt;
 
     constructor(address asset_)
-        ERC20(string.concat("DefaultCollateral_", ERC20(asset_).name()), string.concat("DB_", ERC20(asset_).symbol()))
+        ERC20(string.concat("InstantRepayCollateral_", ERC20(asset_).name()), string.concat("IRC_", ERC20(asset_).symbol()))
     {
         asset = asset_;
 
