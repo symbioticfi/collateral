@@ -103,8 +103,9 @@ contract DelayedRepayCollateral is ERC20, Ownable, ICollateral {
             revert();
         }
 
-        if (amount > debt[issuer][recipient]) {
-            revert();
+        uint256 currentDebt = debt[issuer][recipient];
+        if (amount > currentDebt) {
+            amount = currentDebt;
         }
 
         IERC20(asset).safeTransferFrom(msg.sender, recipient, amount);
@@ -112,7 +113,7 @@ contract DelayedRepayCollateral is ERC20, Ownable, ICollateral {
         totalDebt -= amount;
         issuerDebt[issuer] -= amount;
         recipientDebt[recipient] -= amount;
-        debt[issuer][recipient] -= amount;
+        debt[issuer][recipient] = currentDebt - amount;
 
         totalRepaidDebt += amount;
         issuerRepaidDebt[issuer] += amount;
