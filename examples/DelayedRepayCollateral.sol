@@ -107,7 +107,7 @@ contract DelayedRepayCollateral is ERC20, Ownable, ICollateral {
             revert();
         }
 
-        IERC20(asset).safeTransferFrom(msg.sender, recipient, amount);
+        IERC20(asset).safeTransfer(recipient, amount);
 
         totalDebt -= amount;
         issuerDebt[issuer] -= amount;
