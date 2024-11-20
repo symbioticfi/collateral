@@ -40,10 +40,9 @@ contract SymbioticDefaultCollateralIntegration is SymbioticDefaultCollateralInit
 
     function _loadExistingDefaultCollateralsAndTokens_SymbioticDefaultCollateral() internal virtual {
         if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
-            uint256 numberOfDefaultCollaterals =
-                ISymbioticFactoryLegacy(symbioticDefaultCollateralFactory).totalEntities();
+            uint256 numberOfDefaultCollaterals = symbioticDefaultCollateralFactory.totalEntities();
             for (uint256 i; i < numberOfDefaultCollaterals; ++i) {
-                address defaultCollateral = ISymbioticFactoryLegacy(symbioticDefaultCollateralFactory).entity(i);
+                address defaultCollateral = symbioticDefaultCollateralFactory.entity(i);
                 existingDefaultCollaterals_SymbioticDefaultCollateral.push(defaultCollateral);
                 address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
                 if (!_contains_Symbiotic(existingTokens_SymbioticDefaultCollateral, asset)) {
