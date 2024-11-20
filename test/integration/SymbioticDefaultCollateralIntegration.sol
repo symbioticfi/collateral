@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "./SymbioticDefaultCollateralInit.sol";
-import {console2} from "forge-std/Test.sol";
 
 contract SymbioticDefaultCollateralIntegration is SymbioticDefaultCollateralInit {
     address[] public tokens_SymbioticDefaultCollateral;
@@ -26,10 +25,6 @@ contract SymbioticDefaultCollateralIntegration is SymbioticDefaultCollateralInit
         _loadExistingEntities_SymbioticDefaultCollateral();
         if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
             _addExistingEntities_SymbioticDefaultCollateral();
-        }
-
-        for (uint256 i; i < tokens_SymbioticDefaultCollateral.length; i++) {
-            console2.log("Token:", i, tokens_SymbioticDefaultCollateral[i]);
         }
 
         if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
