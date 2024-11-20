@@ -10,7 +10,9 @@ abstract contract Factory is IFactory {
 
     EnumerableSet.AddressSet private _entities;
 
-    modifier checkEntity(address entity_) {
+    modifier checkEntity(
+        address entity_
+    ) {
         if (!isEntity(entity_)) {
             revert EntityNotExist();
         }
@@ -20,7 +22,9 @@ abstract contract Factory is IFactory {
     /**
      * @inheritdoc IFactory
      */
-    function isEntity(address entity_) public view override returns (bool) {
+    function isEntity(
+        address entity_
+    ) public view override returns (bool) {
         return _entities.contains(entity_);
     }
 
@@ -34,11 +38,15 @@ abstract contract Factory is IFactory {
     /**
      * @inheritdoc IFactory
      */
-    function entity(uint256 index) public view override returns (address) {
+    function entity(
+        uint256 index
+    ) public view override returns (address) {
         return _entities.at(index);
     }
 
-    function _addEntity(address entity_) internal {
+    function _addEntity(
+        address entity_
+    ) internal {
         _entities.add(entity_);
 
         emit AddEntity(entity_);

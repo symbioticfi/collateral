@@ -184,7 +184,9 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
     /**
      * @inheritdoc IDefaultCollateral
      */
-    function increaseLimit(uint256 amount) external onlyLimitIncreaser {
+    function increaseLimit(
+        uint256 amount
+    ) external onlyLimitIncreaser {
         limit += amount;
 
         emit IncreaseLimit(amount);
@@ -193,7 +195,9 @@ contract DefaultCollateral is ERC20Upgradeable, ReentrancyGuardUpgradeable, IDef
     /**
      * @inheritdoc IDefaultCollateral
      */
-    function setLimitIncreaser(address limitIncreaser_) external onlyLimitIncreaser {
+    function setLimitIncreaser(
+        address limitIncreaser_
+    ) external onlyLimitIncreaser {
         limitIncreaser = limitIncreaser_;
 
         emit SetLimitIncreaser(limitIncreaser_);

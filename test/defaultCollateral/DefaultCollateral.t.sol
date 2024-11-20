@@ -109,7 +109,9 @@ contract DefaultCollateralTest is Test {
         defaultCollateralToken.initialize(address(token), 0, address(0));
     }
 
-    function test_Deposit(uint256 amount) public {
+    function test_Deposit(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
 
@@ -139,7 +141,9 @@ contract DefaultCollateralTest is Test {
         vm.stopPrank();
     }
 
-    function test_DepositWithFeeOnTransfer1(uint256 amount) public {
+    function test_DepositWithFeeOnTransfer1(
+        uint256 amount
+    ) public {
         amount = bound(amount, 2, 50 * 1e18);
         _deposit(alice, feeOnTransferToken, amount);
 
@@ -151,28 +155,36 @@ contract DefaultCollateralTest is Test {
         _deposit(alice, feeOnTransferToken, 1);
     }
 
-    function test_DepositWithPermit(uint256 amount) public {
+    function test_DepositWithPermit(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _depositWithPermit(alice, amount, type(uint32).max);
 
         assertEq(defaultCollateralPermitToken.balanceOf(alice), amount);
     }
 
-    function test_DepositWithPermit2(uint256 amount) public {
+    function test_DepositWithPermit2(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _depositWithPermit2(alice, amount, type(uint32).max);
 
         assertEq(defaultCollateralToken.balanceOf(alice), amount);
     }
 
-    function test_DepositWithDAIPermit(uint256 amount) public {
+    function test_DepositWithDAIPermit(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _depositWithDAIPermit(alice, amount, type(uint32).max);
 
         assertEq(defaultCollateralDaiLikeToken.balanceOf(alice), amount);
     }
 
-    function test_DepositOnBehalfOf(uint256 amount) public {
+    function test_DepositOnBehalfOf(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         vm.startPrank(alice);
         defaultCollateralToken.deposit(bob, amount);
@@ -201,7 +213,9 @@ contract DefaultCollateralTest is Test {
         assertEq(defaultCollateralToken.balanceOf(bob), amount2);
     }
 
-    function test_Withdraw(uint256 amount) public {
+    function test_Withdraw(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
         uint256 aliceBalance = token.balanceOf(alice);
@@ -213,14 +227,18 @@ contract DefaultCollateralTest is Test {
         assertEq(defaultCollateralToken.balanceOf(alice), 0);
     }
 
-    function test_WithdrawRevertInsufficientWithdraw(uint256 amount) public {
+    function test_WithdrawRevertInsufficientWithdraw(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
         vm.expectRevert(IDefaultCollateral.InsufficientWithdraw.selector);
         _withdraw(alice, alice, token, 0);
     }
 
-    function test_WithdrawRevertERC20InsufficientBalance(uint256 amount) public {
+    function test_WithdrawRevertERC20InsufficientBalance(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
         vm.expectRevert(
@@ -295,14 +313,18 @@ contract DefaultCollateralTest is Test {
         assertEq(defaultCollateralToken.debt(alice, DEAD), 0);
     }
 
-    function test_IssueRevertInsufficientIssueDebt(uint256 amount) public {
+    function test_IssueRevertInsufficientIssueDebt(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
         vm.expectRevert(IDefaultCollateral.InsufficientIssueDebt.selector);
         _issueDebt(alice, alice, token, 0);
     }
 
-    function test_IssueRevertERC20InsufficientBalance(uint256 amount) public {
+    function test_IssueRevertERC20InsufficientBalance(
+        uint256 amount
+    ) public {
         amount = bound(amount, 1, 50 * 1e18);
         _deposit(alice, token, amount);
         vm.expectRevert(
@@ -362,7 +384,9 @@ contract DefaultCollateralTest is Test {
         defaultCollateral.increaseLimit(amount);
     }
 
-    function test_SetLimitIncreaser(address limitIncreaser) public {
+    function test_SetLimitIncreaser(
+        address limitIncreaser
+    ) public {
         DefaultCollateral defaultCollateral =
             DefaultCollateral(defaultCollateralFactory.create(address(token), type(uint256).max, alice));
 
@@ -373,7 +397,9 @@ contract DefaultCollateralTest is Test {
         assertEq(defaultCollateral.limitIncreaser(), limitIncreaser);
     }
 
-    function test_SetLimitIncreaserRevertNotLimitIncreaser(address limitIncreaser) public {
+    function test_SetLimitIncreaserRevertNotLimitIncreaser(
+        address limitIncreaser
+    ) public {
         DefaultCollateral defaultCollateral =
             DefaultCollateral(defaultCollateralFactory.create(address(token), type(uint256).max, bob));
         vm.expectRevert(IDefaultCollateral.NotLimitIncreaser.selector);
