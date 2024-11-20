@@ -73,13 +73,6 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         }
     }
 
-    function _limitToTokens_SymbioticDefaultCollateral(
-        uint256 amount,
-        uint256 decimals
-    ) internal virtual returns (uint256) {
-        return amount.mulDiv(10 ** decimals, 1e18);
-    }
-
     // ------------------------------------------------------------ TOKEN-RELATED HELPERS ------------------------------------------------------------ //
 
     function _getToken_SymbioticDefaultCollateral() internal virtual returns (address) {
@@ -125,16 +118,11 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
     function _getDefaultCollateralRandom_SymbioticDefaultCollateral(
         address asset
     ) internal virtual returns (address) {
-        uint256 decimals = ERC20(asset).decimals();
         bool hasLimit = _randomChoice_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_HAS_LIMIT_CHANCE);
         uint256 limit = hasLimit
             ? _randomWithBounds_Symbiotic(
-                _limitToTokens_SymbioticDefaultCollateral(
-                    SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18, decimals
-                ),
-                _limitToTokens_SymbioticDefaultCollateral(
-                    SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18, decimals
-                )
+                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18, asset),
+                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18, asset)
             )
             : type(uint256).max;
         return _getDefaultCollateral_SymbioticDefaultCollateral(asset, limit, address(this));
@@ -148,13 +136,10 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         Vm.Wallet memory staker = _getAccount_Symbiotic();
 
         for (uint256 i; i < possibleTokens.length; ++i) {
-            uint256 decimals = ERC20(possibleTokens[i]).decimals();
             deal(
                 possibleTokens[i],
                 staker.addr,
-                _limitToTokens_SymbioticDefaultCollateral(
-                    SYMBIOTIC_DEFAULT_COLLATERAL_TOKENS_TO_SET_TIMES_1e18, decimals
-                ),
+                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_TOKENS_TO_SET_TIMES_1e18, possibleTokens[i]),
                 true
             ); // should cover most cases
         }
@@ -199,16 +184,12 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         address defaultCollateral
     ) internal virtual {
         address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
-        uint256 decimals = ERC20(asset).decimals();
 
-        uint256 minAmount = _limitToTokens_SymbioticDefaultCollateral(
-            SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18, decimals
-        );
+        uint256 minAmount =
+            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18, asset);
         uint256 amount = _randomWithBounds_Symbiotic(
             minAmount,
-            _limitToTokens_SymbioticDefaultCollateral(
-                SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18, decimals
-            )
+            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18, asset)
         );
 
         amount = Math.min(
@@ -260,16 +241,11 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         address defaultCollateral
     ) internal virtual {
         address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
-        uint256 decimals = ERC20(asset).decimals();
 
-        uint256 minAmount = _limitToTokens_SymbioticDefaultCollateral(
-            SYMBIOTIC_DEFAULT_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18, decimals
-        );
+        uint256 minAmount =
+            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18, asset);
         uint256 amount = _randomWithBounds_Symbiotic(
-            minAmount,
-            _limitToTokens_SymbioticDefaultCollateral(
-                SYMBIOTIC_DEFAULT_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18, decimals
-            )
+            minAmount, _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18, asset)
         );
 
         amount = Math.min(amount, type(uint256).max - ISymbioticDefaultCollateral(defaultCollateral).limit());
