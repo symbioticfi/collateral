@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import "@symbioticfi/core/test/integration/SymbioticInit.sol";
 import {SymbioticCoreConstants} from "@symbioticfi/core/test/integration/SymbioticCoreConstants.sol";
 
-import "./SymbioticDefaultCollateralImports.sol";
+import "./SymbioticCollateralImports.sol";
 
-import {SymbioticDefaultCollateralConstants} from "./SymbioticDefaultCollateralConstants.sol";
-import {SymbioticDefaultCollateralBindings} from "./SymbioticDefaultCollateralBindings.sol";
+import {SymbioticCollateralConstants} from "./SymbioticCollateralConstants.sol";
+import {SymbioticCollateralBindings} from "./SymbioticCollateralBindings.sol";
 
 import {Token} from "../mocks/Token.sol";
 import {FeeOnTransferToken} from "../mocks/FeeOnTransferToken.sol";
@@ -16,7 +16,7 @@ import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
-contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollateralBindings {
+contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     using SafeERC20 for IERC20;
     using Math for uint256;
 
@@ -47,20 +47,20 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
     function setUp() public virtual override {
         super.setUp();
 
-        _initDefaultCollateral_SymbioticDefaultCollateral(SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT);
+        _initDefaultCollateral_SymbioticCollateral(SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT);
     }
 
     // ------------------------------------------------------------ GENERAL HELPERS ------------------------------------------------------------ //
 
-    function _initDefaultCollateral_SymbioticDefaultCollateral() internal virtual {
-        symbioticDefaultCollateralFactory = SymbioticDefaultCollateralConstants.defaultCollateralFactory();
+    function _initDefaultCollateral_SymbioticCollateral() internal virtual {
+        symbioticDefaultCollateralFactory = SymbioticCollateralConstants.defaultCollateralFactory();
     }
 
-    function _initDefaultCollateral_SymbioticDefaultCollateral(
+    function _initDefaultCollateral_SymbioticCollateral(
         bool useExisting
     ) internal virtual {
         if (useExisting) {
-            _initDefaultCollateral_SymbioticDefaultCollateral();
+            _initDefaultCollateral_SymbioticCollateral();
         } else {
             symbioticDefaultCollateralFactory = ISymbioticDefaultCollateralFactory(
                 deployCode(
@@ -75,19 +75,15 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
 
     // ------------------------------------------------------------ TOKEN-RELATED HELPERS ------------------------------------------------------------ //
 
-    function _getToken_SymbioticDefaultCollateral() internal virtual returns (address) {
+    function _getToken_SymbioticCollateral() internal virtual returns (address) {
         return address(new Token("Token"));
     }
 
-    function _getFeeOnTransferToken_SymbioticDefaultCollateral() internal virtual returns (address) {
+    function _getFeeOnTransferToken_SymbioticCollateral() internal virtual returns (address) {
         return address(new FeeOnTransferToken("Token"));
     }
 
-    function _getSupportedTokens_SymbioticDefaultCollateral()
-        internal
-        virtual
-        returns (address[] memory supportedTokens)
-    {
+    function _getSupportedTokens_SymbioticCollateral() internal virtual returns (address[] memory supportedTokens) {
         string[] memory supportedTokensStr = SymbioticCoreConstants.supportedTokens();
         supportedTokens = new address[](supportedTokensStr.length);
         for (uint256 i; i < supportedTokensStr.length; i++) {
@@ -97,25 +93,25 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
 
     // ------------------------------------------------------------ DEFAULT-COLLATERAL-RELATED HELPERS ------------------------------------------------------------ //
 
-    function _getDefaultCollateral_SymbioticDefaultCollateral(
+    function _getDefaultCollateral_SymbioticCollateral(
         address asset
     ) internal virtual returns (address) {
-        return _createDefaultCollateral_SymbioticDefaultCollateral(
+        return _createDefaultCollateral_SymbioticCollateral(
             symbioticDefaultCollateralFactory, address(this), asset, type(uint256).max, address(0)
         );
     }
 
-    function _getDefaultCollateral_SymbioticDefaultCollateral(
+    function _getDefaultCollateral_SymbioticCollateral(
         address asset,
         uint256 initialLimit,
         address limitIncreaser
     ) internal virtual returns (address) {
-        return _createDefaultCollateral_SymbioticDefaultCollateral(
+        return _createDefaultCollateral_SymbioticCollateral(
             symbioticDefaultCollateralFactory, address(this), asset, initialLimit, limitIncreaser
         );
     }
 
-    function _getDefaultCollateralRandom_SymbioticDefaultCollateral(
+    function _getDefaultCollateralRandom_SymbioticCollateral(
         address asset
     ) internal virtual returns (address) {
         bool hasLimit = _randomChoice_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_HAS_LIMIT_CHANCE);
@@ -125,12 +121,12 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
                 _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18, asset)
             )
             : type(uint256).max;
-        return _getDefaultCollateral_SymbioticDefaultCollateral(asset, limit, address(this));
+        return _getDefaultCollateral_SymbioticCollateral(asset, limit, address(this));
     }
 
     // ------------------------------------------------------------ STAKER-RELATED HELPERS ------------------------------------------------------------ //
 
-    function _getStaker_SymbioticDefaultCollateral(
+    function _getStaker_SymbioticCollateral(
         address[] memory possibleTokens
     ) internal virtual returns (Vm.Wallet memory) {
         Vm.Wallet memory staker = _getAccount_Symbiotic();
@@ -147,42 +143,39 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         return staker;
     }
 
-    function _getStakerWithStake_SymbioticDefaultCollateral(
+    function _getStakerWithStake_SymbioticCollateral(
         address[] memory possibleTokens,
         address defaultCollateral
     ) internal virtual returns (Vm.Wallet memory) {
-        Vm.Wallet memory staker = _getStaker_SymbioticDefaultCollateral(possibleTokens);
+        Vm.Wallet memory staker = _getStaker_SymbioticCollateral(possibleTokens);
 
-        _stakerDepositRandom_SymbioticDefaultCollateral(staker.addr, defaultCollateral);
+        _stakerDepositRandom_SymbioticCollateral(staker.addr, defaultCollateral);
 
         return staker;
     }
 
-    function _getStakerWithStake_SymbioticDefaultCollateral(
+    function _getStakerWithStake_SymbioticCollateral(
         address[] memory possibleTokens,
         address[] memory defaultCollaterals
     ) internal virtual returns (Vm.Wallet memory) {
-        Vm.Wallet memory staker = _getStaker_SymbioticDefaultCollateral(possibleTokens);
+        Vm.Wallet memory staker = _getStaker_SymbioticCollateral(possibleTokens);
 
         for (uint256 i; i < defaultCollaterals.length; ++i) {
-            _stakerDepositRandom_SymbioticDefaultCollateral(staker.addr, defaultCollaterals[i]);
+            _stakerDepositRandom_SymbioticCollateral(staker.addr, defaultCollaterals[i]);
         }
 
         return staker;
     }
 
-    function _stakerDeposit_SymbioticDefaultCollateral(
+    function _stakerDeposit_SymbioticCollateral(
         address staker,
         address defaultCollateral,
         uint256 amount
     ) internal virtual {
-        _deposit_SymbioticDefaultCollateral(staker, defaultCollateral, amount);
+        _deposit_SymbioticCollateral(staker, defaultCollateral, amount);
     }
 
-    function _stakerDepositRandom_SymbioticDefaultCollateral(
-        address staker,
-        address defaultCollateral
-    ) internal virtual {
+    function _stakerDepositRandom_SymbioticCollateral(address staker, address defaultCollateral) internal virtual {
         address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
 
         uint256 minAmount =
@@ -199,22 +192,19 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         );
 
         if (amount >= minAmount) {
-            _stakerDeposit_SymbioticDefaultCollateral(staker, defaultCollateral, amount);
+            _stakerDeposit_SymbioticCollateral(staker, defaultCollateral, amount);
         }
     }
 
-    function _stakerWithdraw_SymbioticDefaultCollateral(
+    function _stakerWithdraw_SymbioticCollateral(
         address staker,
         address defaultCollateral,
         uint256 amount
     ) internal virtual {
-        _withdraw_SymbioticDefaultCollateral(staker, defaultCollateral, amount);
+        _withdraw_SymbioticCollateral(staker, defaultCollateral, amount);
     }
 
-    function _stakerWithdrawRandom_SymbioticDefaultCollateral(
-        address staker,
-        address defaultCollateral
-    ) internal virtual {
+    function _stakerWithdrawRandom_SymbioticCollateral(address staker, address defaultCollateral) internal virtual {
         uint256 balance = ISymbioticDefaultCollateral(defaultCollateral).balanceOf(staker);
 
         if (balance == 0) {
@@ -223,20 +213,20 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
 
         uint256 amount = _randomWithBounds_Symbiotic(1, balance);
 
-        _stakerWithdraw_SymbioticDefaultCollateral(staker, defaultCollateral, amount);
+        _stakerWithdraw_SymbioticCollateral(staker, defaultCollateral, amount);
     }
 
     // ------------------------------------------------------------ LIMIT-INCREASER-RELATED HELPERS ------------------------------------------------------------ //
 
-    function _limitIncreaserIncreaseLimit_SymbioticDefaultCollateral(
+    function _limitIncreaserIncreaseLimit_SymbioticCollateral(
         address limitIncreaser,
         address defaultCollateral,
         uint256 amount
     ) internal virtual {
-        _increaseLimit_SymbioticDefaultCollateral(defaultCollateral, limitIncreaser, amount);
+        _increaseLimit_SymbioticCollateral(defaultCollateral, limitIncreaser, amount);
     }
 
-    function _limitIncreaserIncreaseLimitRandom_SymbioticDefaultCollateral(
+    function _limitIncreaserIncreaseLimitRandom_SymbioticCollateral(
         address limitIncreaser,
         address defaultCollateral
     ) internal virtual {
@@ -251,7 +241,7 @@ contract SymbioticDefaultCollateralInit is SymbioticInit, SymbioticDefaultCollat
         amount = Math.min(amount, type(uint256).max - ISymbioticDefaultCollateral(defaultCollateral).limit());
 
         if (amount >= minAmount) {
-            _limitIncreaserIncreaseLimit_SymbioticDefaultCollateral(limitIncreaser, defaultCollateral, amount);
+            _limitIncreaserIncreaseLimit_SymbioticCollateral(limitIncreaser, defaultCollateral, amount);
         }
     }
 }

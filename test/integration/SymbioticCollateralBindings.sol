@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./SymbioticDefaultCollateralImports.sol";
+import "./SymbioticCollateralImports.sol";
 
 import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import {Test} from "forge-std/Test.sol";
 
-contract SymbioticDefaultCollateralBindings is Test {
+contract SymbioticCollateralBindings is Test {
     using SafeERC20 for IERC20;
 
-    function _createDefaultCollateral_SymbioticDefaultCollateral(
+    function _createDefaultCollateral_SymbioticCollateral(
         ISymbioticDefaultCollateralFactory symbioticDefaultCollateralFactory,
         address who,
         address asset,
@@ -22,7 +22,7 @@ contract SymbioticDefaultCollateralBindings is Test {
         vm.stopPrank();
     }
 
-    function _deposit_SymbioticDefaultCollateral(
+    function _deposit_SymbioticCollateral(
         address who,
         address defaultCollateral,
         address recipient,
@@ -34,15 +34,15 @@ contract SymbioticDefaultCollateralBindings is Test {
         vm.stopPrank();
     }
 
-    function _deposit_SymbioticDefaultCollateral(
+    function _deposit_SymbioticCollateral(
         address who,
         address defaultCollateral,
         uint256 amount
     ) internal virtual returns (uint256 collateralAmount) {
-        _deposit_SymbioticDefaultCollateral(who, defaultCollateral, who, amount);
+        _deposit_SymbioticCollateral(who, defaultCollateral, who, amount);
     }
 
-    function _deposit_SymbioticDefaultCollateral(
+    function _deposit_SymbioticCollateral(
         address who,
         address defaultCollateral,
         address recipient,
@@ -58,7 +58,7 @@ contract SymbioticDefaultCollateralBindings is Test {
         vm.stopPrank();
     }
 
-    function _deposit_SymbioticDefaultCollateral(
+    function _deposit_SymbioticCollateral(
         address who,
         address defaultCollateral,
         uint256 amount,
@@ -67,10 +67,10 @@ contract SymbioticDefaultCollateralBindings is Test {
         bytes32 r,
         bytes32 s
     ) internal virtual returns (uint256 collateralAmount) {
-        _deposit_SymbioticDefaultCollateral(who, defaultCollateral, who, amount, deadline, v, r, s);
+        _deposit_SymbioticCollateral(who, defaultCollateral, who, amount, deadline, v, r, s);
     }
 
-    function _withdraw_SymbioticDefaultCollateral(
+    function _withdraw_SymbioticCollateral(
         address who,
         address defaultCollateral,
         address recipient,
@@ -81,15 +81,11 @@ contract SymbioticDefaultCollateralBindings is Test {
         vm.stopPrank();
     }
 
-    function _withdraw_SymbioticDefaultCollateral(
-        address who,
-        address defaultCollateral,
-        uint256 amount
-    ) internal virtual {
-        _withdraw_SymbioticDefaultCollateral(who, defaultCollateral, who, amount);
+    function _withdraw_SymbioticCollateral(address who, address defaultCollateral, uint256 amount) internal virtual {
+        _withdraw_SymbioticCollateral(who, defaultCollateral, who, amount);
     }
 
-    function _increaseLimit_SymbioticDefaultCollateral(
+    function _increaseLimit_SymbioticCollateral(
         address who,
         address defaultCollateral,
         uint256 amount
@@ -99,7 +95,7 @@ contract SymbioticDefaultCollateralBindings is Test {
         vm.stopPrank();
     }
 
-    function _setLimitIncreaser_SymbioticDefaultCollateral(
+    function _setLimitIncreaser_SymbioticCollateral(
         address who,
         address defaultCollateral,
         address limitIncreaser

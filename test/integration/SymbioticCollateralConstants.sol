@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./SymbioticDefaultCollateralImports.sol";
+import "./SymbioticCollateralImports.sol";
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-library SymbioticDefaultCollateralConstants {
+library SymbioticCollateralConstants {
     using Strings for string;
 
     function defaultCollateralFactory() internal view returns (ISymbioticDefaultCollateralFactory) {
@@ -16,7 +16,7 @@ library SymbioticDefaultCollateralConstants {
             // holesky
             return ISymbioticDefaultCollateralFactory(0x7224eeF9f38E9240beA197970367E0A8CBDFDD8B);
         } else {
-            revert("SymbioticDefaultCollateralConstants.defaultCollateralFactory(): chainid not supported");
+            revert("SymbioticCollateralConstants.defaultCollateralFactory(): chainid not supported");
         }
     }
 
@@ -58,7 +58,7 @@ library SymbioticDefaultCollateralConstants {
         } else if (symbol.equal("DC_LBTC")) {
             return DC_LBTC();
         } else {
-            revert("SymbioticDefaultCollateralConstants.defaultCollateral(): symbol not supported");
+            revert("SymbioticCollateralConstants.defaultCollateral(): symbol not supported");
         }
     }
 
@@ -100,7 +100,7 @@ library SymbioticDefaultCollateralConstants {
         } else if (symbol.equal("DC_LBTC")) {
             return DC_LBTCSupported();
         } else {
-            revert("SymbioticDefaultCollateralConstants.defaultCollateralSupported(): symbol not supported");
+            revert("SymbioticCollateralConstants.defaultCollateralSupported(): symbol not supported");
         }
     }
 
@@ -109,7 +109,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0xC329400492c6ff2438472D4651Ad17389fCb843a;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_wstETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_wstETH(): chainid not supported");
         }
     }
 
@@ -118,7 +118,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0xB26ff591F44b04E78de18f43B46f8b70C6676984;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_cbETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_cbETH(): chainid not supported");
         }
     }
 
@@ -127,7 +127,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x422F5acCC812C396600010f224b320a743695f85;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_wBETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_wBETH(): chainid not supported");
         }
     }
 
@@ -139,7 +139,7 @@ library SymbioticDefaultCollateralConstants {
             // holesky
             return 0x7322c24752f79c05FFD1E2a6FCB97020C1C264F1;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_rETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_rETH(): chainid not supported");
         }
     }
 
@@ -148,7 +148,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x475D3Eb031d250070B63Fa145F0fCFC5D97c304a;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_mETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_mETH(): chainid not supported");
         }
     }
 
@@ -157,7 +157,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x38B86004842D3FA4596f0b7A0b53DE90745Ab654;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_swETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_swETH(): chainid not supported");
         }
     }
 
@@ -166,7 +166,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x5198CB44D7B2E993ebDDa9cAd3b9a0eAa32769D2;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_sfrxETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_sfrxETH(): chainid not supported");
         }
     }
 
@@ -175,7 +175,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0xBdea8e677F9f7C294A4556005c640Ee505bE6925;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_ETHx(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_ETHx(): chainid not supported");
         }
     }
 
@@ -184,7 +184,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0xe39B5f5638a209c1A6b6cDFfE5d37F7Ac99fCC84;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_ENA(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_ENA(): chainid not supported");
         }
     }
 
@@ -193,7 +193,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x19d0D8e6294B7a04a2733FE433444704B791939A;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_sUSDe(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_sUSDe(): chainid not supported");
         }
     }
 
@@ -202,7 +202,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x971e5b5D4baa5607863f3748FeBf287C7bf82618;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_WBTC(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_WBTC(): chainid not supported");
         }
     }
 
@@ -211,7 +211,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x0C969ceC0729487d264716e55F232B404299032c;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_tBTC(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_tBTC(): chainid not supported");
         }
     }
 
@@ -220,7 +220,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0xB09A50AcFFF7D12B7d18adeF3D1027bC149Bad1c;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_LsETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_LsETH(): chainid not supported");
         }
     }
 
@@ -229,7 +229,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x52cB8A621610Cc3cCf498A1981A8ae7AD6B8AB2a;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_osETH(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_osETH(): chainid not supported");
         }
     }
 
@@ -238,7 +238,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x21DbBA985eEA6ba7F27534a72CCB292eBA1D2c7c;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_ETHFI(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_ETHFI(): chainid not supported");
         }
     }
 
@@ -247,7 +247,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x940750A267c64f3BBcE31B948b67CD168f0843fA;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_FXS(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_FXS(): chainid not supported");
         }
     }
 
@@ -256,7 +256,7 @@ library SymbioticDefaultCollateralConstants {
             // mainnet
             return 0x9C0823D3A1172F9DdF672d438dec79c39a64f448;
         } else {
-            revert("SymbioticDefaultCollateralConstants.DC_LBTC(): chainid not supported");
+            revert("SymbioticCollateralConstants.DC_LBTC(): chainid not supported");
         }
     }
 

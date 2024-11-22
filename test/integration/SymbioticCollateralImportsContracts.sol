@@ -6,4 +6,4 @@ import {DefaultCollateral as SymbioticDefaultCollateral} from
 import {DefaultCollateralFactory as SymbioticDefaultCollateralFactory} from
     "../../src/contracts/defaultCollateral/DefaultCollateralFactory.sol";
 
-interface SymbioticDefaultCollateralImportsContracts {}
+interface SymbioticCollateralImportsContracts {}

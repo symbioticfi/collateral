@@ -10,4 +10,4 @@ import {
     IFactory as ISymbioticFactoryLegacy
 } from "../../src/interfaces/defaultCollateral/IDefaultCollateralFactory.sol";
 
-interface SymbioticDefaultCollateralImports {}
+interface SymbioticCollateralImports {}
