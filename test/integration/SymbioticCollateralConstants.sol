@@ -57,6 +57,8 @@ library SymbioticCollateralConstants {
             return DC_FXS();
         } else if (symbol.equal("DC_LBTC")) {
             return DC_LBTC();
+        } else if (symbol.equal("DC_SWELL")) {
+            return DC_SWELL();
         } else {
             revert("SymbioticCollateralConstants.defaultCollateral(): symbol not supported");
         }
@@ -99,6 +101,8 @@ library SymbioticCollateralConstants {
             return DC_FXSSupported();
         } else if (symbol.equal("DC_LBTC")) {
             return DC_LBTCSupported();
+        } else if (symbol.equal("DC_SWELL")) {
+            return DC_SWELLSupported();
         } else {
             revert("SymbioticCollateralConstants.defaultCollateralSupported(): symbol not supported");
         }
@@ -260,6 +264,15 @@ library SymbioticCollateralConstants {
         }
     }
 
+    function DC_SWELL() internal view returns (address) {
+        if (block.chainid == 1) {
+            // mainnet
+            return 0x544f45485418341C1a2B3a44404F12302277fFFC;
+        } else {
+            revert("SymbioticCollateralConstants.DC_SWELL(): chainid not supported");
+        }
+    }
+
     function DC_wstETHSupported() internal view returns (bool) {
         return block.chainid == 1;
     }
@@ -328,8 +341,12 @@ library SymbioticCollateralConstants {
         return block.chainid == 1;
     }
 
+    function DC_SWELLSupported() internal view returns (bool) {
+        return block.chainid == 1;
+    }
+
     function allDefaultCollaterals() internal view returns (string[] memory result) {
-        result = new string[](17);
+        result = new string[](18);
         result[0] = "DC_wstETH";
         result[1] = "DC_cbETH";
         result[2] = "DC_wBETH";
@@ -347,6 +364,7 @@ library SymbioticCollateralConstants {
         result[14] = "DC_ETHFI";
         result[15] = "DC_FXS";
         result[16] = "DC_LBTC";
+        result[17] = "DC_SWELL";
     }
 
     function supportedDefaultCollaterals() internal view returns (string[] memory result) {
