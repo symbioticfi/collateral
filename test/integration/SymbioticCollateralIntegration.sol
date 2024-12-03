@@ -12,10 +12,10 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     address[] public existingTokens_SymbioticCollateral;
     address[] public existingDefaultCollaterals_SymbioticCollateral;
 
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_NUMBER_OF_STAKERS = 30;
+    uint256 public SYMBIOTIC_COLLATERAL_NUMBER_OF_STAKERS = 30;
 
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_DEPOSIT_INTO_DEFAULT_COLLATERAL_CHANCE = 1; // lower -> higher probability
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_WITHDRAW_FROM_DEFAULT_COLLATERAL_CHANCE = 3;
+    uint256 public SYMBIOTIC_COLLATERAL_DEPOSIT_INTO_COLLATERAL_CHANCE = 1; // lower -> higher probability
+    uint256 public SYMBIOTIC_COLLATERAL_WITHDRAW_FROM_COLLATERAL_CHANCE = 3;
 
     function setUp() public virtual override {
         super.setUp();
@@ -23,12 +23,12 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
         _addPossibleTokens_SymbioticCollateral();
 
         _loadExistingEntities_SymbioticCollateral();
-        if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
+        if (SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
             _addExistingEntities_SymbioticCollateral();
         }
 
-        if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
-            _createStakers_SymbioticCollateral(SYMBIOTIC_DEFAULT_COLLATERAL_NUMBER_OF_STAKERS);
+        if (SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
+            _createStakers_SymbioticCollateral(SYMBIOTIC_COLLATERAL_NUMBER_OF_STAKERS);
         } else {
             _createEnvironment_SymbioticCollateral();
         }
@@ -39,7 +39,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     }
 
     function _loadExistingDefaultCollateralsAndTokens_SymbioticCollateral() internal virtual {
-        if (SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
+        if (SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
             uint256 numberOfDefaultCollaterals = symbioticDefaultCollateralFactory.totalEntities();
             for (uint256 i; i < numberOfDefaultCollaterals; ++i) {
                 address defaultCollateral = symbioticDefaultCollateralFactory.entity(i);
@@ -59,7 +59,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
                 tokens_SymbioticCollateral.push(supportedTokens[i]);
             }
         }
-        if (!SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
+        if (!SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
             tokens_SymbioticCollateral.push(_getToken_SymbioticCollateral());
             tokens_SymbioticCollateral.push(_getFeeOnTransferToken_SymbioticCollateral());
         }
@@ -95,7 +95,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     }
 
     function _createEnvironment_SymbioticCollateral() internal virtual {
-        _createParties_SymbioticCollateral(SYMBIOTIC_DEFAULT_COLLATERAL_NUMBER_OF_STAKERS);
+        _createParties_SymbioticCollateral(SYMBIOTIC_COLLATERAL_NUMBER_OF_STAKERS);
 
         _depositIntoDefaultCollaterals_SymbioticCollateral();
         _withdrawFromDefaultCollaterals_SymbioticCollateral();
@@ -127,7 +127,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     function _depositIntoDefaultCollaterals_SymbioticCollateral() internal virtual {
         for (uint256 i; i < stakers_SymbioticCollateral.length; ++i) {
             for (uint256 j; j < defaultCollaterals_SymbioticCollateral.length; ++j) {
-                if (_randomChoice_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_DEPOSIT_INTO_DEFAULT_COLLATERAL_CHANCE)) {
+                if (_randomChoice_Symbiotic(SYMBIOTIC_COLLATERAL_DEPOSIT_INTO_COLLATERAL_CHANCE)) {
                     _stakerDepositRandom_SymbioticCollateral(
                         stakers_SymbioticCollateral[i].addr, defaultCollaterals_SymbioticCollateral[j]
                     );
@@ -139,7 +139,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     function _withdrawFromDefaultCollaterals_SymbioticCollateral() internal virtual {
         for (uint256 i; i < stakers_SymbioticCollateral.length; ++i) {
             for (uint256 j; j < defaultCollaterals_SymbioticCollateral.length; ++j) {
-                if (_randomChoice_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_WITHDRAW_FROM_DEFAULT_COLLATERAL_CHANCE)) {
+                if (_randomChoice_Symbiotic(SYMBIOTIC_COLLATERAL_WITHDRAW_FROM_COLLATERAL_CHANCE)) {
                     _stakerWithdrawRandom_SymbioticCollateral(
                         stakers_SymbioticCollateral[i].addr, defaultCollaterals_SymbioticCollateral[j]
                     );

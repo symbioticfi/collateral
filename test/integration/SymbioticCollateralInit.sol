@@ -22,32 +22,32 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
 
     // General config
 
-    string public SYMBIOTIC_DEFAULT_COLLATERAL_PROJECT_ROOT = "";
-    bool public SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT = false;
+    string public SYMBIOTIC_COLLATERAL_PROJECT_ROOT = "";
+    bool public SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT = false;
 
     // DefaultCollateral-related config
 
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_HAS_LIMIT_CHANCE = 1;
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18 = 0 * 1e18;
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18 = 1_000_000_000 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_HAS_LIMIT_CHANCE = 1;
+    uint256 public SYMBIOTIC_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18 = 0 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18 = 1_000_000_000 * 1e18;
 
     // Staker-related config
 
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_TOKENS_TO_SET_TIMES_1e18 = 100_000_000 * 1e18;
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18 = 0.001 * 1e18;
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18 = 10_000 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_TOKENS_TO_SET_TIMES_1e18 = 100_000_000 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18 = 0.001 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18 = 10_000 * 1e18;
 
     // LimitIncreaser-related config
 
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18 = 0.1 * 1e18;
-    uint256 public SYMBIOTIC_DEFAULT_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18 = 1_000_000_000 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18 = 0.1 * 1e18;
+    uint256 public SYMBIOTIC_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18 = 1_000_000_000 * 1e18;
 
     ISymbioticDefaultCollateralFactory symbioticDefaultCollateralFactory;
 
     function setUp() public virtual override {
         super.setUp();
 
-        _initDefaultCollateral_SymbioticCollateral(SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT);
+        _initDefaultCollateral_SymbioticCollateral(SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT);
     }
 
     // ------------------------------------------------------------ GENERAL HELPERS ------------------------------------------------------------ //
@@ -65,7 +65,7 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
             symbioticDefaultCollateralFactory = ISymbioticDefaultCollateralFactory(
                 deployCode(
                     string.concat(
-                        SYMBIOTIC_DEFAULT_COLLATERAL_PROJECT_ROOT,
+                        SYMBIOTIC_COLLATERAL_PROJECT_ROOT,
                         "out/DefaultCollateralFactory.sol/DefaultCollateralFactory.json"
                     )
                 )
@@ -91,7 +91,7 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
         }
     }
 
-    // ------------------------------------------------------------ DEFAULT-COLLATERAL-RELATED HELPERS ------------------------------------------------------------ //
+    // ------------------------------------------------------------ COLLATERAL-RELATED HELPERS ------------------------------------------------------------ //
 
     function _getDefaultCollateral_SymbioticCollateral(
         address asset
@@ -114,11 +114,11 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     function _getDefaultCollateralRandom_SymbioticCollateral(
         address asset
     ) internal virtual returns (address) {
-        bool hasLimit = _randomChoice_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_HAS_LIMIT_CHANCE);
+        bool hasLimit = _randomChoice_Symbiotic(SYMBIOTIC_COLLATERAL_HAS_LIMIT_CHANCE);
         uint256 limit = hasLimit
             ? _randomWithBounds_Symbiotic(
-                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18, asset),
-                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18, asset)
+                _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MIN_TOKENS_LIMIT_TIMES_1e18, asset),
+                _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MAX_TOKENS_LIMIT_TIMES_1e18, asset)
             )
             : type(uint256).max;
         return _getDefaultCollateral_SymbioticCollateral(asset, limit, address(this));
@@ -135,7 +135,7 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
             deal(
                 possibleTokens[i],
                 staker.addr,
-                _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_TOKENS_TO_SET_TIMES_1e18, possibleTokens[i]),
+                _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_TOKENS_TO_SET_TIMES_1e18, possibleTokens[i]),
                 true
             ); // should cover most cases
         }
@@ -178,11 +178,9 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     function _stakerDepositRandom_SymbioticCollateral(address staker, address defaultCollateral) internal virtual {
         address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
 
-        uint256 minAmount =
-            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18, asset);
+        uint256 minAmount = _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MIN_TOKENS_TO_DEPOSIT_TIMES_1e18, asset);
         uint256 amount = _randomWithBounds_Symbiotic(
-            minAmount,
-            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18, asset)
+            minAmount, _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MAX_TOKENS_TO_DEPOSIT_TIMES_1e18, asset)
         );
 
         amount = Math.min(
@@ -232,10 +230,9 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     ) internal virtual {
         address asset = ISymbioticDefaultCollateral(defaultCollateral).asset();
 
-        uint256 minAmount =
-            _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18, asset);
+        uint256 minAmount = _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MIN_INCREASE_LIMIT_TIMES_1e18, asset);
         uint256 amount = _randomWithBounds_Symbiotic(
-            minAmount, _normalizeForToken_Symbiotic(SYMBIOTIC_DEFAULT_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18, asset)
+            minAmount, _normalizeForToken_Symbiotic(SYMBIOTIC_COLLATERAL_MAX_INCREASE_LIMIT_TIMES_1e18, asset)
         );
 
         amount = Math.min(amount, type(uint256).max - ISymbioticDefaultCollateral(defaultCollateral).limit());

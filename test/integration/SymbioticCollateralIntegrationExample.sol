@@ -7,10 +7,10 @@ import {console2} from "forge-std/Test.sol";
 
 contract SymbioticCollateralIntegrationExample is SymbioticCollateralIntegration {
     function setUp() public override {
-        SYMBIOTIC_DEFAULT_COLLATERAL_PROJECT_ROOT = "";
+        SYMBIOTIC_COLLATERAL_PROJECT_ROOT = "";
         // vm.selectFork(vm.createFork(vm.rpcUrl("mainnet")));
         // SYMBIOTIC_INIT_BLOCK = 21_227_029;
-        // SYMBIOTIC_DEFAULT_COLLATERAL_USE_EXISTING_DEPLOYMENT = true;
+        // SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT = true;
 
         super.setUp();
     }
