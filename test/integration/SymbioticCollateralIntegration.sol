@@ -18,7 +18,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
     uint256 public SYMBIOTIC_COLLATERAL_WITHDRAW_FROM_COLLATERAL_CHANCE = 3;
 
     function setUp() public virtual override {
-        super.setUp();
+        SymbioticCollateralInit.setUp();
 
         _addPossibleTokens_SymbioticCollateral();
 
