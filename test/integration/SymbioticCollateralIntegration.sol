@@ -60,8 +60,8 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
             }
         }
         if (!SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT) {
-            tokens_SymbioticCollateral.push(_getToken_SymbioticCollateral());
-            tokens_SymbioticCollateral.push(_getFeeOnTransferToken_SymbioticCollateral());
+            tokens_SymbioticCollateral.push(_getToken_SymbioticCore());
+            tokens_SymbioticCollateral.push(_getFeeOnTransferToken_SymbioticCore());
         }
     }
 

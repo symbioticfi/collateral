@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@symbioticfi/core/test/integration/SymbioticInit.sol";
+import "@symbioticfi/core/test/integration/SymbioticCoreInit.sol";
 import {SymbioticCoreConstants} from "@symbioticfi/core/test/integration/SymbioticCoreConstants.sol";
 
 import "./SymbioticCollateralImports.sol";
@@ -9,14 +9,11 @@ import "./SymbioticCollateralImports.sol";
 import {SymbioticCollateralConstants} from "./SymbioticCollateralConstants.sol";
 import {SymbioticCollateralBindings} from "./SymbioticCollateralBindings.sol";
 
-import {Token} from "../mocks/Token.sol";
-import {FeeOnTransferToken} from "../mocks/FeeOnTransferToken.sol";
-
 import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
-contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
+contract SymbioticCollateralInit is SymbioticCoreInit, SymbioticCollateralBindings {
     using SafeERC20 for IERC20;
     using Math for uint256;
 
@@ -45,7 +42,7 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     ISymbioticDefaultCollateralFactory symbioticDefaultCollateralFactory;
 
     function setUp() public virtual override {
-        super.setUp();
+        SymbioticInit.setUp();
 
         _initDefaultCollateral_SymbioticCollateral(SYMBIOTIC_COLLATERAL_USE_EXISTING_DEPLOYMENT);
     }
@@ -74,14 +71,6 @@ contract SymbioticCollateralInit is SymbioticInit, SymbioticCollateralBindings {
     }
 
     // ------------------------------------------------------------ TOKEN-RELATED HELPERS ------------------------------------------------------------ //
-
-    function _getToken_SymbioticCollateral() internal virtual returns (address) {
-        return address(new Token("Token"));
-    }
-
-    function _getFeeOnTransferToken_SymbioticCollateral() internal virtual returns (address) {
-        return address(new FeeOnTransferToken("Token"));
-    }
 
     function _getSupportedTokens_SymbioticCollateral() internal virtual returns (address[] memory supportedTokens) {
         string[] memory supportedTokensStr = SymbioticCoreConstants.supportedTokens();
