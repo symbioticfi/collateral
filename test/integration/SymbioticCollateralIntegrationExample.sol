@@ -18,7 +18,7 @@ contract SymbioticCollateralIntegrationExample is SymbioticCollateralIntegration
     function test_Simple() public {
         console2.log("Default Collaterals:", defaultCollaterals_SymbioticCollateral.length);
 
-        for (uint256 i; i < defaultCollaterals_SymbioticCollateral.length; i++) {
+        for (uint256 i; i < defaultCollaterals_SymbioticCollateral.length; ++i) {
             console2.log("Default Collateral:", defaultCollaterals_SymbioticCollateral[i]);
 
             console2.log(

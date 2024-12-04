@@ -75,7 +75,7 @@ contract SymbioticCollateralInit is SymbioticCoreInit, SymbioticCollateralBindin
     function _getSupportedTokens_SymbioticCollateral() internal virtual returns (address[] memory supportedTokens) {
         string[] memory supportedTokensStr = SymbioticCoreConstants.supportedTokens();
         supportedTokens = new address[](supportedTokensStr.length);
-        for (uint256 i; i < supportedTokensStr.length; i++) {
+        for (uint256 i; i < supportedTokensStr.length; ++i) {
             supportedTokens[i] = SymbioticCoreConstants.token(supportedTokensStr[i]);
         }
     }

@@ -54,7 +54,7 @@ contract SymbioticCollateralIntegration is SymbioticCollateralInit {
 
     function _addPossibleTokens_SymbioticCollateral() internal virtual {
         address[] memory supportedTokens = _getSupportedTokens_SymbioticCollateral();
-        for (uint256 i; i < supportedTokens.length; i++) {
+        for (uint256 i; i < supportedTokens.length; ++i) {
             if (_supportsDeal_Symbiotic(supportedTokens[i])) {
                 tokens_SymbioticCollateral.push(supportedTokens[i]);
             }
