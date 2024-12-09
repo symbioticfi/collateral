@@ -39,7 +39,7 @@ contract SymbioticCollateralBindings is Test {
         address defaultCollateral,
         uint256 amount
     ) internal virtual returns (uint256 collateralAmount) {
-        _deposit_SymbioticCollateral(who, defaultCollateral, who, amount);
+        collateralAmount = _deposit_SymbioticCollateral(who, defaultCollateral, who, amount);
     }
 
     function _deposit_SymbioticCollateral(
@@ -67,7 +67,7 @@ contract SymbioticCollateralBindings is Test {
         bytes32 r,
         bytes32 s
     ) internal virtual returns (uint256 collateralAmount) {
-        _deposit_SymbioticCollateral(who, defaultCollateral, who, amount, deadline, v, r, s);
+        collateralAmount = _deposit_SymbioticCollateral(who, defaultCollateral, who, amount, deadline, v, r, s);
     }
 
     function _withdraw_SymbioticCollateral(
