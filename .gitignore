@@ -1,6 +1,8 @@
 # Compiler files
 cache/
-out/build-info/
+out/**/
+!out/DefaultCollateralFactory.sol/
+!out/DefaultCollateral.sol/
 
 # Ignores development broadcast logs
 !/broadcast
