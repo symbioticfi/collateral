@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.25;
+pragma solidity ^0.8.0;
 
 import {ICollateral} from "src/interfaces/ICollateral.sol";
 
@@ -89,12 +89,16 @@ interface IDefaultCollateral is ICollateral {
      * @param amount amount to increase the limit by
      * @dev Called only by limitIncreaser.
      */
-    function increaseLimit(uint256 amount) external;
+    function increaseLimit(
+        uint256 amount
+    ) external;
 
     /**
      * @notice Set a new limit increaser.
      * @param limitIncreaser address of the new limit increaser
      * @dev Called only by limitIncreaser.
      */
-    function setLimitIncreaser(address limitIncreaser) external;
+    function setLimitIncreaser(
+        address limitIncreaser
+    ) external;
 }
